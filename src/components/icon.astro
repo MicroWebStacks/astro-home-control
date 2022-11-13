@@ -1,0 +1,14 @@
+---
+
+import githubImg from '@/img/github-dark.png'
+export interface Props {
+  filename: string;
+}
+
+const { filename } = Astro.props as Props;
+
+---
+{
+    (filename == "github") &&
+    <img src={githubImg} height="32px"/>
+}

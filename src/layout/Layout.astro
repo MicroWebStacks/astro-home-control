@@ -1,0 +1,284 @@
+---
+import AppBar from './AppBar.astro';
+import NavMenu from './NavMenu.astro';
+import ToCMenu from './ToCMenu.astro';
+import raw_menu from "../config/menu.json"
+import { remove_base,process_menu_tree,process_toc_list } from "../components/menu_utils";
+
+
+export interface Props {
+	title: string;
+	headings: Array<Object>;
+}
+
+const { headings } = Astro.props;
+const { title } = Astro.props.frontmatter || Astro.props;
+
+const baseUrl = import.meta.env.BASE_URL.slice(0, -1)
+const pageUrl = remove_base(baseUrl,Astro.url.pathname)
+
+const left_nav_menu = process_menu_tree(pageUrl,raw_menu)
+const right_toc_menu = process_toc_list(headings)
+---
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={`${baseUrl}/favicon.svg`} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body >
+		<div id="fixed-left" class={`fixed-nav ${left_nav_menu.visible?"active":""}`} />
+		<div class="appbar-nav_content-footer">
+			<header>
+				<AppBar/>
+			</header>
+			<main>
+				{left_nav_menu.visible &&
+				<>
+					<div id="wide-nav">
+						<NavMenu items={left_nav_menu.items} />
+					</div>
+					<div id="resize-left" class="nav-resize active"/>
+				</>
+				}
+
+				<article class="content">
+					<div id="mobile-nav">
+						<NavMenu items={left_nav_menu.items} />
+					</div>
+					<div class="article-slot">
+						<slot/>
+					</div>
+				</article>
+				{right_toc_menu.visible &&
+				<>
+					<div id="resize-right" class="nav-resize active"/>
+					<div id="right-toc">
+						<ToCMenu items={right_toc_menu.items} />
+					</div>
+				</>
+				}
+			</main>
+			<footer>
+				<p>Home Automation Control powered by Astro.js</p>
+			</footer>
+		</div>
+		<div id="fixed-right" class={`fixed-nav ${right_toc_menu.visible?"active":""}`}/>
+	</body>
+</html>
+
+<style>
+body{
+	margin:0;
+	font-family: Arial, Helvetica, sans-serif;
+	display:flex;
+	flex-direction: row;
+}
+header{
+    flex-grow:0;
+	background-color: #3C3C3C;
+    width:100%;
+    user-select: none;
+}
+#wide-nav{
+	background: #252526;
+}
+#mobile-nav{
+	display: none;
+}
+main{
+	flex-grow:1;
+	display:flex;
+	flex-direction: row;
+	height:80vh;
+}
+
+footer{
+	flex-grow:0;
+	background-color: #007ACC;
+	color:white;
+	text-align: center;
+	overflow: hidden;
+}
+footer p{
+	margin:6px;
+}
+
+.fixed-nav{
+	width:3em;
+	background-color: #333333;
+	height:100vh;
+    flex-shrink: 0;
+	display:flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	overflow: hidden;
+}
+.active.fixed-nav{
+	cursor:pointer;
+}
+.active.fixed-nav:hover{
+	background-color: #545454;
+	transition: background-color 0.3s;
+}
+.appbar-nav_content-footer{
+	flex-grow:1;
+	display:flex;
+	flex-direction: column;
+	height:100vh;
+}
+	.nav-resize{
+		width:0.5rem;
+		background-color: #1E1E1E;
+	}
+	.active.nav-resize{
+		cursor:col-resize;
+	}
+	.active.nav-resize:hover{
+		background-color: #007ACC;
+		transition: background-color 0.5s;
+	}
+.content{
+	color:#CCCCCC;
+	background-color: #1E1E1E;
+	width:100%;
+	overflow:auto;
+	padding:10px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 10px;
+}
+.content::-webkit-scrollbar {
+	width: 1rem;
+}
+.content::-webkit-scrollbar-track {
+	background: #1E1E1E; 
+}
+.content::-webkit-scrollbar-thumb {
+	background: #464647; 
+}
+.content::-webkit-scrollbar-thumb:hover {
+  background: #515151; 
+}
+
+#right-toc{
+	background: #252526;
+}
+@media only screen and (max-width: 700px) {
+	#fixed-left, #fixed-right, #resize-right, #resize-left, #right-toc {
+		display:none;
+	}
+	.content{
+		display:flex;
+		flex-direction: column;
+	}
+	#wide-nav{
+		display:none;
+	}
+	#mobile-nav{
+		display: block;
+		background-color: aqua;
+	}
+	.article-slot{
+
+	}
+
+}
+
+</style>
+
+<style is:inline>
+	.article-slot * > a{
+			color:#3794FF;
+	}
+</style>
+
+<script >
+
+	function configure_nav(fixed_el,resize_el,nav_el,left_to_right){
+		fixed_el.addEventListener("click",(e)=>{
+			const current_state = nav_el.getAttribute("data-state")
+			console.log(current_state)
+			if(current_state == "open"){
+				nav_el.setAttribute("data-state","closed")
+				nav_el.style.width = "0vw"
+			}else if(current_state == "closed"){
+				nav_el.setAttribute("data-state","open")
+				nav_el.style.width = nav_el.getAttribute("data-width")
+			}
+			e.preventDefault()
+		})
+
+		var global_resize_state = false
+		var x_down
+		var start_width
+		
+		function finish_mouse(){
+			global_resize_state = false
+			nav_el.style.transition = "width 0.5s"
+		if(nav_el.clientWidth < 20){
+			nav_el.setAttribute("data-state","closed")
+			nav_el.setAttribute("data-width","20vw")
+		}else{
+			nav_el.setAttribute("data-state","open")
+		}
+		resize_el.style.backgroundColor = "#1E1E1E"
+		}
+		
+		resize_el.addEventListener("mouseenter",(e)=>{
+			resize_el.style.backgroundColor = "#007ACC"
+		})
+		resize_el.addEventListener("mouseleave",(e)=>{
+			resize_el.style.backgroundColor = "#1E1E1E"
+		})
+		resize_el.addEventListener("mousedown",(e)=>{
+			global_resize_state = true
+			x_down = e.x
+			start_width = nav_el.clientWidth
+			nav_el.style.transition = "none"
+		})
+		resize_el.addEventListener("mouseup",(e)=>{
+			finish_mouse()
+		})
+		document.addEventListener("mouseup",(e)=>{
+			if(global_resize_state == true){
+				finish_mouse()
+			}
+		})
+		document.addEventListener("mousemove",(e)=>{
+			if(global_resize_state == true){
+				const new_width = left_to_right?(start_width + e.x - x_down):(start_width - e.x + x_down)
+				if(new_width <= 60){//snap effect
+					nav_el.style.width = "0px"
+					nav_el.setAttribute("data-width","0px")
+					resize_el.style.backgroundColor = "#007ACC"
+				}else if(new_width < 160){
+					//do nothing here
+				}else if(new_width < (document.documentElement.clientWidth)*0.4){
+					nav_el.style.width = new_width+"px"
+					nav_el.setAttribute("data-width",new_width+"px")
+					resize_el.style.backgroundColor = "#007ACC"
+				}else{
+					resize_el.style.backgroundColor = "red"
+				}
+				e.preventDefault()
+			}
+		})
+	}
+	
+	const fixed_left = document.getElementById("fixed-left")
+	if(fixed_left.classList.contains("active")){
+		const resize_left = document.getElementById("resize-left")
+		const nav = resize_left.previousElementSibling.firstElementChild
+		configure_nav(fixed_left,resize_left,nav,true)
+	}
+	const fixed_right = document.getElementById("fixed-right")
+	if(fixed_right.classList.contains("active")){
+		const resize_right = document.getElementById("resize-right")
+		const nav = resize_right.nextElementSibling.firstElementChild
+		configure_nav(fixed_right,resize_right,nav,false)
+	}
+
+</script>

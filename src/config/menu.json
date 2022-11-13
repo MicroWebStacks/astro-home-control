@@ -1,0 +1,40 @@
+[
+    {
+        "text":"Heat",
+        "href":"/"
+    },
+    {
+        "text":"Sound",
+        "href":"/sound"
+    },
+    {
+        "text":"Power",
+        "href":"/power"
+    },
+    {
+        "text":"Grafana",
+        "href":"/grafana/ambient",
+        "items":[
+            {
+                "text":"Ambient",
+                "href":"ambient"
+            },
+            {
+                "text":"Energy Day",
+                "href":"energy"
+            },
+            {
+                "text":"Energy 30",
+                "href":"energy_30"
+            },
+            {
+                "text":"Ambient 3h",
+                "href":"ambient_3h"
+            }
+        ]
+    },
+    {
+        "icon":"github",
+        "href":"https://github.com/MicroWebStacks/astro-home-control"
+    }
+]
