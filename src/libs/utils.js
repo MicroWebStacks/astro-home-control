@@ -58,11 +58,21 @@ function window_event(event_name,data){
 	window.dispatchEvent(event);
 }
 
+
+function root_dir(){
+	let rootdir = rel_to_abs(import.meta.url,"../..")
+	if(import.meta.env.PROD){
+	  rootdir = rel_to_abs(import.meta.url,"../..")
+	}
+	return rootdir	
+}
+
 export{
     rel_to_abs,
     relAssetToUrl,
     uid,
     suid,
     event,
-    window_event
+    window_event,
+    root_dir
 }

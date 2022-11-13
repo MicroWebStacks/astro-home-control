@@ -5,11 +5,11 @@
     },
     {
         "text":"Sound",
-        "href":"/sound"
+        "href":"/sound/"
     },
     {
         "text":"Power",
-        "href":"/power"
+        "href":"/power/"
     },
     {
         "text":"Grafana",

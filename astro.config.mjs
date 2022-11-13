@@ -7,7 +7,8 @@ dotenv.config()
 export default defineConfig({
   output: "server",
   server:{
-    port:parseInt(process.env.SERVER_PORT)
+    port:parseInt(process.env.SERVER_PORT),
+    host:true
   },
   adapter: node({
     mode: 'standalone'

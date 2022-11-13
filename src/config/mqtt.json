@@ -1,0 +1,20 @@
+{  
+    "mqtt":{
+        "port":1883,
+        "keepalive":60,
+        "client_id":"astro_home_control",
+        "subscriptions":[  
+            "lzig/pc socket",
+            "lzig/lifx socket",
+            "lzig/poster socket",
+            "lzig/wifi mesh socket"
+         ],
+        "publish" :true,
+        "subscribe" :true
+    },
+    "log":{
+        "logfile":"/log/log (date).txt",
+        "exceptions_log_file":"/log/log_exceptions (date).txt",
+        "level":"info"
+    }
+}

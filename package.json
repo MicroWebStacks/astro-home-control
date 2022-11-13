@@ -13,6 +13,8 @@
   "dependencies": {
     "@astrojs/node": "^3.0.0",
     "astro": "^1.6.7",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "mqtt": "^4.3.7",
+    "winston": "^3.8.2"
   }
 }
