@@ -1,0 +1,22 @@
+---
+export interface Props {
+    name: string;
+}
+
+const { name } = Astro.props as Props;
+
+
+const init_state = await fetch(import.meta.env.SERVER+'/api/'+name).then((response) => response.json());
+
+---
+<p class={init_state.state}>{name}</p>
+<p class={init_state.state}>{init_state.state}</p>
+
+<style>
+.ON{
+    background-color: green;
+}
+.OFF{
+    background-color:black;
+}
+</style>

@@ -1,17 +1,42 @@
 ---
 import Layout from "@/layout/Layout.astro";
-
-const pc_init = await fetch(import.meta.env.SERVER+'/api/pc').then((response) => response.json());
-
-console.log(pc_init)
+import SwitchPanel from "@/components/switch_panel.astro";
 
 ---
 <Layout title="Heat" >
-	<p>
-		Devices Power control
-	</p>
-	<h1>PC</h1>
-	<p>
-		{pc_init.state}
-	</p>
+	<ul>
+		<li>
+			<SwitchPanel name="mesh"/>
+		</li>
+		<li>
+			<SwitchPanel name="lifx"/>
+		</li>
+		<li>
+			<SwitchPanel name="poster"/>
+		</li>
+		<li>
+			<SwitchPanel name="pc"/>
+		</li>
+	</ul>
 </Layout>
+
+
+<style>
+ul{
+	display:flex;
+	flex-direction: column;
+	gap: 10px;
+	list-style: none;
+	margin-right:10px;
+	padding: 0px;
+}
+li{
+	border-radius: 10px;
+	background-color:brown;
+	width:100%;
+	height:19vh;
+	min-height: 160px;
+	padding: 5px;
+}
+
+</style>
