@@ -1,0 +1,11 @@
+[Unit]
+Description=Astro home webapp service to run as an SSR
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=node /home/pi/astro-home-control/dist/server/entry.mjs
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
