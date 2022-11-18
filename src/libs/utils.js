@@ -4,7 +4,7 @@ import {resolve,normalize,dirname,join,relative} from 'path'
 
 //resolve(reference,relative) does not work due to 'file:\'
 function rel_to_abs(reference,relative){
-  return join(dirname(normalize(reference)),relative).replace("file:\\","")
+  return join(dirname(normalize(reference)),relative).replace("file:\\","").replace("//","").replace("file:","")
 }
 
 //Note 'imp*ort.me*ta.en*v.BA*SE_URL' only works from Astro component not from remark-rel-asset plugin

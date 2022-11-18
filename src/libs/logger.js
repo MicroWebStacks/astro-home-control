@@ -1,14 +1,13 @@
 import fs from 'fs'
 import {transports,createLogger, format} from 'winston'
-import {rel_to_abs} from './utils'
+import {root_dir} from './utils'
 
-const root_dir = rel_to_abs(import.meta.url,'../..')
-const config = JSON.parse(fs.readFileSync(root_dir+'/src/config/mqtt.json'))
+const config = JSON.parse(fs.readFileSync(root_dir()+'/src/config/mqtt.json'))
 
 let date = new Date().toISOString()
 let date_day = date.split('T')[0]
-let filename = root_dir+config.log.logfile.replace("(date)",date_day)
-let ex_filename = root_dir+config.log.exceptions_log_file.replace("(date)",date_day)
+let filename = root_dir()+config.log.logfile.replace("(date)",date_day)
+let ex_filename = root_dir()+config.log.exceptions_log_file.replace("(date)",date_day)
 
 console.log(filename)
 console.log(ex_filename)
