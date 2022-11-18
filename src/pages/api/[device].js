@@ -2,6 +2,7 @@ import {readFileSync} from 'fs'
 import * as mqtt from '../../libs/mqtt.js'
 import {root_dir} from '../../libs/utils'
 
+console.log(root_dir()+'/src/config/mqtt.json')
 const config = JSON.parse(readFileSync(root_dir()+'/src/config/mqtt.json'))
 
 const devices = {
