@@ -1,23 +1,25 @@
 ---
 export interface Props {
     name: string;
+    disabled: boolean;
 }
 
-const { name } = Astro.props as Props;
+const { name, disabled = false } = Astro.props as Props;
 
+const device_url = import.meta.env.SERVER+'/api/'+name
+const init_state = await fetch(device_url).then((response) => response.json());
 
-const init_state = await fetch(import.meta.env.SERVER+'/api/'+name).then((response) => response.json());
-
-const state = (init_state.state == "ON")?"ON":"OFF"
+const state = (init_state.state.toLowerCase() == "on")?"on":"off"
 const notifyInit = (init_state.state == "Init")?"offline":""
+
 ---
-<div class="container">
+<div class="container" >
     <img src={`/media/${name}-${state}.png`}>
     <h1>{name+' '+notifyInit}</h1>
     <label class="switch">
-        {(state == "ON") ?
-        <input type="checkbox" checked>:
-        <input type="checkbox">}
+        <input  class="check_in" type="checkbox" checked={(state == "on")} 
+                disabled={disabled} data-url={device_url}
+        >
         <span class="slider"></span>
     </label>
 </div>
@@ -25,10 +27,6 @@ const notifyInit = (init_state.state == "Init")?"offline":""
 
 <style>
     /* https://www.w3schools.com/howto/howto_css_switch.asp */
-.container{
-    display:flex;
-    flex-direction: column;
-}
 h1{
     padding-left:10px;
 }
@@ -36,22 +34,18 @@ img{
     max-height:12vh;
 }
 
-label{
-    margin:10px;
-    margin-top:0px;
-}
-
 .switch {
+  margin:10px;
+  margin-top:0px;
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
+.switch input{
+  display: none;
 }
 
 .slider {
@@ -85,7 +79,7 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #f3d542;
+  box-shadow: 0 0 1px #2196F3;
 }
 
 input:checked + .slider:before {
@@ -94,9 +88,43 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+input:disabled + .slider{
+  background-color: #f3ac42;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .slider:hover::before{
   background-color: rgb(63, 63, 63);
 
 }
 
 </style>
+
+<script type="module">
+  
+  async function put(url, data) {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return await response.json()
+  }
+
+  const input_elements = document.querySelectorAll(".check_in")
+    const inputs = [...input_elements]
+    for(let input in inputs){
+        inputs[input].onchange = (e)=>{
+          const device_url = e.target.getAttribute("data-url")
+          const state = e.target.checked?"on":"off"
+          put(device_url,{state}).then((resp)=>{
+            e.target.checked = (resp.state.toLowerCase()=="on")?true:false
+          });
+        }
+    }
+
+</script>

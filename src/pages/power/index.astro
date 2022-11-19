@@ -2,6 +2,7 @@
 import Layout from "@/layout/Layout.astro";
 import SwitchPanel from "@/components/switch_panel.astro";
 
+console.log("power")
 ---
 <Layout title="Heat" >
 	<ul>
@@ -15,7 +16,7 @@ import SwitchPanel from "@/components/switch_panel.astro";
 			<SwitchPanel name="poster"/>
 		</li>
 		<li>
-			<SwitchPanel name="pc"/>
+			<SwitchPanel name="pc" disabled/>
 		</li>
 	</ul>
 </Layout>
@@ -35,7 +36,7 @@ li{
 	border-radius: 10px;
 	background-color:rgb(112, 112, 112);
 	overflow: hidden;
-    box-shadow: 2px 1px 5px #aaa;
+    box-shadow: 2px 1px 10px rgb(123, 123, 123);
 }
 li:hover{
 	box-shadow: 4px 5px 5px #ccc;

@@ -8,3 +8,11 @@ content-type: application/json
 {
     "state": "on"
 }
+
+###
+PUT http://localhost:4000/api/lifx
+content-type: application/json
+
+{
+    "state": "off"
+}

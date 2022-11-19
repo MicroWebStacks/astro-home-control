@@ -38,6 +38,7 @@ const devices = {
 const controllable_devices = ["lifx","mesh","poster"]
 
 export async function put({params,request}){
+  console.log(params)
     const device = params.device
     if(!controllable_devices.includes(device)){
         console.error(`no '${device}' device available for control`)
@@ -48,9 +49,10 @@ export async function put({params,request}){
     }
 
     const content = await request.json()
-    console.log(content)
-
-    mqtt.publish(config.control.lifx,'{"state":"OFF"}')
+    if("state" in content){
+      console.log(` => setting ${device} to ${content.state}`)
+      mqtt.publish(devices[device].control,`{"state":"${content.state}"}`)
+    }
 
     return new Response(JSON.stringify(content), {
         status: 200,
@@ -61,6 +63,8 @@ export async function put({params,request}){
 }
 
 export async function get({params}){
+  console.log(params)
+
   const device = params.device
   if(!Object.keys(devices).includes(device)){
       console.error(`device : '${device}' not available`)
