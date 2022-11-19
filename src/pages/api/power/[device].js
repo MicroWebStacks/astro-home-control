@@ -1,8 +1,6 @@
 import {readFileSync} from 'fs'
-import * as mqtt from '../../libs/mqtt.js'
-import {root_dir} from '../../libs/utils'
-
-const config = JSON.parse(readFileSync(root_dir()+'/src/config/mqtt.json'))
+import * as mqtt from '../../../libs/mqtt.js'
+import {root_dir} from '../../../libs/utils'
 
 const devices = {
   poster:{
@@ -35,23 +33,27 @@ const devices = {
   },
 }
 
-const controllable_devices = ["lifx","mesh","poster"]
+const devices_list = ["lifx","mesh","poster","pc"]
 
 export async function put({params,request}){
   console.log(params)
     const device = params.device
-    if(!controllable_devices.includes(device)){
+    if(!devices_list.includes(device)){
         console.error(`no '${device}' device available for control`)
-        return new Response(null, {
+        return new Response(JSON.stringify({state:"off"}), {
             status: 404,
-            statusText: `Device ${device} not available`
+            headers: {
+              "Content-Type": "application/json"
+            }
           });        
     }
 
     const content = await request.json()
     if("state" in content){
-      console.log(` => setting ${device} to ${content.state}`)
-      mqtt.publish(devices[device].control,`{"state":"${content.state}"}`)
+      if((device !="pc") || (content.state == true)){//pc only goes on not off
+        console.log(` => setting ${device} to ${content.state}`)
+        mqtt.publish(devices[device].control,`{"state":"${content.state}"}`)
+      }
     }
 
     return new Response(JSON.stringify(content), {
@@ -68,11 +70,14 @@ export async function get({params}){
   const device = params.device
   if(!Object.keys(devices).includes(device)){
       console.error(`device : '${device}' not available`)
-      return new Response(null, {
-          status: 404,
-          statusText: `No ${device} device available`
-        });        
-  }
+      return new Response(JSON.stringify({state:"off"}), {
+        status: 404,
+        statusText: `No ${device} device available`,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });        
+}
 
   return new Response(JSON.stringify({state:devices[device].state}), {
       status: 200,
@@ -82,7 +87,7 @@ export async function get({params}){
     });    
 }
 
-mqtt.Emitter.on('mqtt',(data)=>{
+mqtt.Emitter.on('power',(data)=>{
   try{
     for (const [name, value] of Object.entries(devices)) {
       if(data.topic == value.topic){

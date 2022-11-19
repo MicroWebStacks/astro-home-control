@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><!DOCTYPE svg>
+<svg width="70.866px" height="70.866px" viewBox="0 0 70.866 70.866" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g>
+    <path d="   M58.501,54.815h6.939V19.521c0-1.917-1.554-3.47-3.47-3.47l0,0c-1.916,0-3.47,1.553-3.47,3.47V54.815z" fill="#00000000" stroke="#040000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+    
+    <path d="   M5.426,54.815V27.774c0-1.917,1.554-3.47,3.471-3.47c1.916,0,3.469,1.553,3.469,3.47v27.041H5.426z" fill="#00000000" stroke="#040000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+    
+    <rect fill="#00000000" height="13.596" stroke="#040000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" width="46.136" x="12.365" y="36.756"/>
+    
+    <circle cx="50.371" cy="28.913" fill="#00000000" r="4.053" stroke="#040000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+    
+    <polygon fill="#00000000" points="   12.365,42.9 42.078,42.9 42.078,23.802 12.365,27.736  " stroke="#040000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+</g>
+</svg>

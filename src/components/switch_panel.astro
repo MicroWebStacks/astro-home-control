@@ -1,17 +1,17 @@
 ---
 export interface Props {
     name: string;
-    disabled: boolean;
 }
 
-const { name, disabled = false } = Astro.props as Props;
+const { name } = Astro.props as Props;
 
-const device_url = import.meta.env.SERVER+'/api/'+name
+const device_url = import.meta.env.SERVER+'/api/power/'+name
 const init_state = await fetch(device_url).then((response) => response.json());
 
 const state = (init_state.state.toLowerCase() == "on")?"on":"off"
 const notifyInit = (init_state.state == "Init")?"offline":""
 
+const disabled = (name == "pc")?state:false
 ---
 <div class="container" >
     <img src={`/media/${name}-${state}.png`}>

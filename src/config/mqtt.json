@@ -2,12 +2,26 @@
     "mqtt":{
         "port":1883,
         "keepalive":60,
-        "client_id":"astro_home_control",
         "subscriptions":[  
             "lzig/pc socket",
             "lzig/lifx socket",
             "lzig/poster socket",
-            "lzig/wifi mesh socket"
+            "lzig/wifi mesh socket",
+            "lzig/living heat",
+            "nrf/livingroom tag",
+            "lzig/living heat weather",
+            "lzig/bedroom heat",
+            "nrf/bedroom tag",
+            "lzig/bedroom heat weather",
+            "lzig/kitchen heat",
+            "nrf/kitchen tag",
+            "lzig/kitchen heat weather",
+            "lzig/bathroom heat",
+            "nrf/bathroom tag",
+            "lzig/bathroom heat weather",
+            "lzig/office heat",
+            "nrf/office tag",
+            "lzig/office heat weather"
          ],
         "publish" :true,
         "subscribe" :true

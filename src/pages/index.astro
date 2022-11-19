@@ -1,18 +1,44 @@
 ---
 import Layout from "@/layout/Layout.astro";
+import HeatSlider from "@/components/heat_slider.astro";
 
-const pc_init = await fetch(import.meta.env.SERVER+'/api/pc').then((response) => response.json());
-
-console.log(pc_init)
+console.log("heat")
 
 ---
 <Layout title="Heat" >
-	<p>
-		Rooms heating sliders
-	</p>
-	<h1>Living room</h1>
-	<h1>Office</h1>
-	<h1>Bed room</h1>
-	<h1>Kitchen</h1>
-	<h1>Bathroom</h1>
+	<ul>
+		<li>
+			<HeatSlider name="livingroom"/>
+		</li>
+		<li>
+			<HeatSlider name="bedroom"/>
+		</li>
+		<li>
+			<HeatSlider name="kitchen"/>
+		</li>
+		<li>
+			<HeatSlider name="office"/>
+		</li>
+	</ul>
 </Layout>
+
+<style>
+	ul{
+		display:flex;
+		flex-direction: row;
+		justify-content: center;
+		gap: 2px;
+		list-style: none;
+		padding: 0px;
+	}
+	li{
+		border-radius: 10px;
+		background-color:rgb(112, 112, 112);
+		overflow: hidden;
+		box-shadow: 2px 1px 5px rgb(123, 123, 123);
+	}
+	li:hover{
+		box-shadow: 4px 5px 5px #ccc;
+	}
+	
+	</style>

@@ -1,0 +1,86 @@
+---
+export interface Props {
+    name: string;
+}
+
+const { name } = Astro.props as Props;
+
+const device_url = import.meta.env.SERVER+'/api/heat/'+name
+const init_state = await fetch(device_url).then((response) => response.json());
+
+---
+<div class="container" >
+    <object data={`/media/${name}.svg`} />
+    <div class="humidity"></div>
+    <div class="slider"></div>
+    <div class="valve"></div>
+    <div class="last"></div>
+</div>
+
+<style>
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width:150px;
+  max-width:20vw;
+}
+
+object{
+  margin:5px;
+  max-width:70px;
+}
+
+.humidity{
+  background-color: aquamarine;
+  width:150px;
+  height:50px;
+}
+
+.slider{
+  background-color:azure;
+  height:50vh;
+  width:150px;
+}
+
+.valve{
+  background-color: brown;
+  width:150px;
+  height:60px;
+}
+
+.last{
+  width:150px;
+  height:30px;
+}
+
+</style>
+
+<script type="module">
+  
+  async function put(url, data) {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return await response.json()
+  }
+
+  const input_elements = document.querySelectorAll(".check_in")
+    const inputs = [...input_elements]
+    for(let input in inputs){
+        inputs[input].onchange = (e)=>{
+          const device_url = e.target.getAttribute("data-url")
+          const state = e.target.checked?"on":"off"
+          put(device_url,{state}).then((resp)=>{
+            e.target.checked = (resp.state.toLowerCase()=="on")?true:false
+          });
+        }
+    }
+
+</script>
