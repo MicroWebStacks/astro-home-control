@@ -6,6 +6,10 @@ After=multi-user.target
 Type=simple
 ExecStart=node /home/pi/astro-home-control/dist/server/entry.mjs
 Restart=on-abort
+Environment="SERVER=http://10.0.0.31:4000"
+Environment="SERVER_HOST=10.0.0.31"
+Environment="SERVER_PORT=4000"
+Environment="MQTT_HOST=localhost"
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+{
+    "short_name": "Home",
+    "name": "Home Automation",
+    "icons": [
+      {
+        "src": "/favicon.svg",
+        "type": "image/svg"
+      }
+    ],
+    "start_url": "/",
+    "display": "fullscreen"
+}
