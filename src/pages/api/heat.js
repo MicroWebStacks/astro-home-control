@@ -10,8 +10,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/livingroom tag",
-          temperature:0
+          topic:"nrf/livingroom tag"
       },
       metal:{
           topic:"lzig/living heat weather",
@@ -26,8 +25,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/bedroom tag",
-          temperature:0
+          topic:"nrf/bedroom tag"
       },
       metal:{
           topic:"lzig/bedroom heat weather",
@@ -42,8 +40,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/kitchen tag",
-          temperature:0
+          topic:"nrf/kitchen tag"
       },
       metal:{
           topic:"lzig/kitchen heat weather",
@@ -58,8 +55,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/bathroom tag",
-          temperature:0
+          topic:"nrf/bathroom tag"
       },
       metal:{
           topic:"lzig/bathroom heat weather",
@@ -74,8 +70,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/office tag",
-          temperature:0
+          topic:"nrf/office tag"
       },
       metal:{
           topic:"lzig/office heat weather",
@@ -125,7 +120,17 @@ mqtt.Emitter.on('heat',(data)=>{
     for (const [name, value] of Object.entries(devices)) {
       if(data.topic == value.heater.topic){
         value.heater.data = JSON.parse(data.msg)
-        logger.debug(`api/heat> ${name} updated to pi_heating_demand ${value.heater.data.pi_heating_demand}`)
+        logger.debug(`api/heat> ${name} updated heater`)
+      }else if(data.topic == value.ambient.topic){
+        const measures = JSON.parse(data.msg)
+        if("temperature" in measures){
+          value.ambient.temperature = measures.temperature
+          value.ambient.humidity = measures.humidity
+          logger.debug(`api/heat> ${name} updated temperature humidity`)
+        }
+      }else if(data.topic == value.metal.topic){
+        value.metal.data = JSON.parse(data.msg)
+        logger.debug(`api/heat> ${name} updated metal heat`)
       }
     }
   }catch(e){
