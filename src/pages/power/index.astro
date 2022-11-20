@@ -3,9 +3,10 @@ import Layout from "@/layout/Layout.astro";
 import SwitchPanel from "@/components/switch_panel.astro";
 
 console.log("power index.astro")
+const events_url = import.meta.env.SERVER+'/api/events'
 ---
 <Layout title="Heat" >
-	<ul>
+	<ul class="power page" data-url={events_url}>
 		<li>
 			<SwitchPanel name="mesh"/>
 		</li>
@@ -43,3 +44,19 @@ li:hover{
 }
 
 </style>
+
+<script>
+	function setup_sse(){
+		const ul = document.querySelector(".power.page")
+		const evtSource = new EventSource(ul.getAttribute("data-url"))
+	
+		evtSource.onmessage = (event) => {
+			console.log("Event source")
+			console.log(event.data)
+		}
+		evtSource.onerror = (err) => {
+			  console.error("EventSource failed:", err);
+			  evtSource.close();
+		};	
+	}
+</script>

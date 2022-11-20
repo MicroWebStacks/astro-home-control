@@ -12,7 +12,7 @@
         "href":"/power/"
     },
     {
-        "text":"Chart",
+        "text":"Charts",
         "href":"/grafana/ambient",
         "items":[
             {
