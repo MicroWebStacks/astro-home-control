@@ -4,9 +4,11 @@ import HeatSlider from "@/components/heat_slider.astro";
 
 console.log("heat main index.astro")
 
+const baseUrl = import.meta.env.BASE_URL.slice(0, -1)
+const heat_url = import.meta.env.SERVER+'/api/heat'
 ---
 <Layout title="Heat" >
-	<ul>
+	<ul id="heat_page_ul" data-base-url={baseUrl} data-api-url={heat_url}>
 		<li>
 			<HeatSlider name="livingroom"/>
 		</li>
@@ -41,4 +43,20 @@ console.log("heat main index.astro")
 		box-shadow: 4px 5px 5px #ccc;
 	}
 	
-	</style>
+</style>
+
+<script>
+	const heat_page_ul = document.getElementById("heat_page_ul")
+	const {async_fetch} = await import("../libs/client_utils.js")
+	const apiUrl = heat_page_ul.getAttribute("data-api-url")
+
+	function update_heat_state(devices){
+		console.log(devices)
+	}
+
+	setTimeout(()=>{
+		async_fetch(apiUrl).then((resp)=>{
+			update_heat_state(resp)
+		})
+        },500)
+</script>

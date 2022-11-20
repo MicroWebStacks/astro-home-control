@@ -81,6 +81,28 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+async function async_put(url, data) {
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  return await response.json()
+}
+
+
+async function async_fetch(url){
+  const response = await fetch(url)
+  return await response.json()
+}
+
+
+
+
 export{
     rel_to_abs,
     relAssetToUrl,
@@ -90,5 +112,7 @@ export{
     window_event,
     root_dir,
     log_file_path,
-    delay
-}
+    delay,
+    async_put,
+    async_fetch
+  }

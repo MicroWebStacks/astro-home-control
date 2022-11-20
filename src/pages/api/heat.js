@@ -1,5 +1,5 @@
-import { logger } from '../../../libs/logger.js'
-import * as mqtt from '../../../libs/mqtt.js'
+import { logger } from '../../libs/logger.js'
+import * as mqtt from '../../libs/mqtt.js'
 
 const devices = {
   livingroom:{
@@ -88,44 +88,31 @@ const devices_list = ["livingroom","bedroom","kitchen","bathroom","office"]
 
 export async function put({params,request}){
   logger.verbose("api/heat> put()")
-  const device = params.device
-    if(!devices_list.includes(device)){
-        logger.error(`api/heat> no '${device}' device available for control`)
-        return new Response(null, {
-            status: 404,
-            statusText: `Device ${device} not available`
-          });        
-    }
+  const reqj = await request.json()
+  console.log(reqj)
 
-    const content = await request.json()
-    if("state" in content){
-      logger.verbose(`api/heat>  => setting ${device} to ${content.state}`)
-      //mqtt.publish(devices[device].control,`{"state":"${content.state}"}`)
-    }
-
-    return new Response(JSON.stringify(content), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });    
-}
-
-export async function get({params}){
-  logger.verbose("api/heat> get()")
-
-  const device = params.device
-  if(!Object.keys(devices).includes(device)){
-      logger.error(`api/heat> device : '${device}' not available`)
-      return new Response(JSON.stringify({state:"off"}), {
+  if((!"device" in reqj) ||(!devices_list.includes(reqj.device))){
+    logger.error(`api/heat> no '${device}' device available for control`)
+    return new Response({}, {
         status: 404,
         headers: {
           "Content-Type": "application/json"
         }
-      });    
-    }
+    });        
+  }
 
-  return new Response(JSON.stringify({state:devices[device].state}), {
+  return new Response(JSON.stringify(devices[reqj.device]), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });    
+}
+
+export async function get(){
+  logger.verbose("api/heat> get()")
+
+  return new Response(JSON.stringify(devices), {
       status: 200,
       headers: {
         "Content-Type": "application/json"

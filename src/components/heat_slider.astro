@@ -1,12 +1,13 @@
 ---
+import { async_put } from '@/libs/utils.js';
 export interface Props {
     name: string;
 }
 
 const { name } = Astro.props as Props;
 
-const device_url = import.meta.env.SERVER+'/api/heat/'+name
-const init_state = await fetch(device_url).then((response) => response.json());
+const heat_url = import.meta.env.SERVER+'/api/heat'
+const devices = async_put(heat_url,{device:name})
 
 ---
 <div class="container" >
