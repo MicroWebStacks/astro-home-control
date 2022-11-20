@@ -1,6 +1,7 @@
-import {readFileSync} from 'fs'
 import * as mqtt from '../../../libs/mqtt.js'
-import {root_dir} from '../../../libs/utils'
+import {delay} from '../../../libs/utils'
+import {logger} from '../../../libs/logger.js'
+
 
 const devices = {
   poster:{
@@ -8,38 +9,37 @@ const devices = {
       control:"lzig/poster socket/set",
       media_on:"/media/poster.png",
       media_off:"/media/poster-dark.png",
-      state:"Init",power:0,disabled:false
+      state:"off",power:0,disabled:false
   },
   lifx:{
       topic:"lzig/lifx socket",
       control:"lzig/lifx socket/set",
       media_on:"/media/lifx.png",
       media_off:"/media/lifx-dark.png",
-      state:"Init",power:0,disabled:false
+      state:"off",power:0,disabled:false
   },
   mesh:{
       topic:"lzig/wifi mesh socket",
       control:"lzig/wifi mesh socket/set",
       media_on:"/media/wifi-on.png",
       media_off:"/media/wifi-off.png",
-      state:"Init",power:0,disabled:false
+      state:"off",power:0,disabled:false
   },
   pc:{
       topic:"lzig/pc socket",
       control:"lzig/pc socket/set",
       media_on:"/media/pc.png",
       media_off:"/media/pc.png",
-      state:"Init",power:0,disabled:true
+      state:"off",power:0,disabled:true
   },
 }
 
 const devices_list = ["lifx","mesh","poster","pc"]
 
 export async function put({params,request}){
-  console.log(params)
     const device = params.device
     if(!devices_list.includes(device)){
-        console.error(`no '${device}' device available for control`)
+        logger.error(`api/power> no '${device}' device available for control`)
         return new Response(JSON.stringify({state:"off"}), {
             status: 404,
             headers: {
@@ -51,12 +51,18 @@ export async function put({params,request}){
     const content = await request.json()
     if("state" in content){
       if((device !="pc") || (content.state == true)){//pc only goes on not off
-        console.log(` => setting ${device} to ${content.state}`)
-        mqtt.publish(devices[device].control,`{"state":"${content.state}"}`)
+        logger.verbose(`api/power> => setting ${device} to ${content.state}`)
+        const topic = devices[device].control
+        const value = JSON.stringify({state:content.state.toUpperCase()})
+        mqtt.publish(topic,value)
+        logger.verbose(`api/power> publish '${topic}' => '${value}'`)
+        logger.verbose(`api/power> client.connected = '${mqtt.client.connected}'`)
+        await delay(1000)
       }
     }
 
-    return new Response(JSON.stringify(content), {
+    logger.verbose(`api/power> put() ${device} = set ${content.state}/ get ${devices[device].state}`)
+    return new Response(JSON.stringify({state:devices[device].state}), {
         status: 200,
         headers: {
           "Content-Type": "application/json"
@@ -65,11 +71,10 @@ export async function put({params,request}){
 }
 
 export async function get({params}){
-  console.log(params)
 
   const device = params.device
   if(!Object.keys(devices).includes(device)){
-      console.error(`device : '${device}' not available`)
+      logger.error(`api/power> device : '${device}' not available`)
       return new Response(JSON.stringify({state:"off"}), {
         status: 404,
         statusText: `No ${device} device available`,
@@ -79,7 +84,8 @@ export async function get({params}){
       });        
 }
 
-  return new Response(JSON.stringify({state:devices[device].state}), {
+logger.verbose(`api/power> get() ${device} = ${devices[device].state}`)
+return new Response(JSON.stringify({state:devices[device].state}), {
       status: 200,
       headers: {
         "Content-Type": "application/json"
@@ -92,7 +98,7 @@ mqtt.Emitter.on('power',(data)=>{
     for (const [name, value] of Object.entries(devices)) {
       if(data.topic == value.topic){
         value.state = JSON.parse(data.msg).state
-        console.log(`${name} updated to ${value.state}`)
+        logger.debug(`api/power> ${name} updated to ${value.state}`)
       }
     }
   }catch(e){
@@ -100,4 +106,5 @@ mqtt.Emitter.on('power',(data)=>{
   }
 })
 
+logger.info("api/power> init")
 mqtt.start()

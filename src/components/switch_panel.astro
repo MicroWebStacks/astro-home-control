@@ -8,17 +8,15 @@ const { name } = Astro.props as Props;
 const device_url = import.meta.env.SERVER+'/api/power/'+name
 const init_state = await fetch(device_url).then((response) => response.json());
 
-const state = (init_state.state.toLowerCase() == "on")?"on":"off"
-const notifyInit = (init_state.state == "Init")?"offline":""
-
+const state = init_state.state.toLowerCase()
 const disabled = (name == "pc")?state:false
 ---
 <div class="container" >
     <img src={`/media/${name}-${state}.png`}>
-    <h1>{name+' '+notifyInit}</h1>
+    <h1>{name}</h1>
     <label class="switch">
-        <input  class="check_in" type="checkbox" checked={(state == "on")} 
-                disabled={disabled} data-url={device_url}
+        <input  class={`check_in ${(state == "on")?"on":"off"}`} type="checkbox" checked={(state == "on")} 
+                disabled={disabled} data-url={device_url} data-name={name}
         >
         <span class="slider"></span>
     </label>
@@ -74,21 +72,17 @@ img{
   border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: #f3d542;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
 
-input:disabled + .slider{
+input.on + .slider {
+  background-color: #f3d542;
+}
+
+input:disabled.on + .slider{
   background-color: #f3ac42;
   cursor: not-allowed;
   opacity: 0.5;
@@ -101,9 +95,22 @@ input:disabled + .slider{
 
 </style>
 
-<script type="module">
+<script>
+  console.log(" => switch_panel.astro script")
   
-  async function put(url, data) {
+  function setCardState(name,input_el,state){
+    if(state == "on"){
+      input_el.classList.add("on")
+      input_el.classList.remove("off")
+    }else{
+      input_el.classList.add("off")
+      input_el.classList.remove("on")
+    }
+    const img = input_el.parentElement.parentElement.querySelector("img")
+    img.src = `/media/${name}-${state}.png`
+  }
+
+  async function async_put(url, data) {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -114,17 +121,42 @@ input:disabled + .slider{
 
     return await response.json()
   }
+  async function async_get(url){
+    const response = await fetch(url)
+    return await response.json()
+  }
+
+  function put(name,state,element){
+    console.log(`   * put() '${name}' at '${state}'`)
+    const device_url = element.getAttribute("data-url")
+    async_put(device_url,{state}).then((resp)=>{
+      console.log(resp)
+            setCardState(name,element,resp.state.toLowerCase())
+          });
+  }
+
+  function get(name,element){
+    const device_url = element.getAttribute("data-url")
+    async_get(device_url).then((resp)=>{
+      setCardState(name,element,resp.state.toLowerCase())
+    })
+  }
 
   const input_elements = document.querySelectorAll(".check_in")
     const inputs = [...input_elements]
     for(let input in inputs){
-        inputs[input].onchange = (e)=>{
-          const device_url = e.target.getAttribute("data-url")
+      const element = inputs[input]
+      const name = element.getAttribute("data-name")
+        console.log(` * init for '${name}'`)
+        element.onchange = (e)=>{
+          const device_name = e.target.getAttribute("data-name")
           const state = e.target.checked?"on":"off"
-          put(device_url,{state}).then((resp)=>{
-            e.target.checked = (resp.state.toLowerCase()=="on")?true:false
-          });
+          put(device_name,state,e.target)
         }
+        //on page reload the dev server reinitializes MQTT and states update asynchronously right after
+        setTimeout(()=>{
+          get(name,element)
+        },500)
     }
 
 </script>

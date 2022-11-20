@@ -1,7 +1,6 @@
 {  
     "mqtt":{
         "port":1883,
-        "keepalive":60,
         "subscriptions":[  
             "lzig/pc socket",
             "lzig/lifx socket",
@@ -27,8 +26,10 @@
         "subscribe" :true
     },
     "log":{
-        "logfile":"/log/log (date).txt",
-        "exceptions_log_file":"/log/log_exceptions (date).txt",
-        "level":"info"
+        "logfile":{
+            "default":"log/log (date).log",
+            "lifo":"../share/log (date).log"
+        },
+        "level":"verbose"
     }
 }

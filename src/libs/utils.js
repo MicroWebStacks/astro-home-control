@@ -1,5 +1,6 @@
 import {existsSync,copyFileSync,mkdirSync} from 'fs'
 import {resolve,normalize,dirname,join,relative} from 'path'
+import {hostname} from 'os'
 //import config from '../../astro.config.mjs'
 
 //resolve(reference,relative) does not work due to 'file:\'
@@ -47,7 +48,6 @@ function suid(){
   return sub+"_"+Math.floor(Math.random() * 10000)
 }
 
-
 function event(element,event_name,data=null){
 	var event = new CustomEvent(event_name, {detail:data});
 	element.dispatchEvent(event);
@@ -58,13 +58,27 @@ function window_event(event_name,data){
 	window.dispatchEvent(event);
 }
 
-
 function root_dir(){
 	let rootdir = rel_to_abs(import.meta.url,"../..")
 	if(import.meta.env.PROD){
 	  rootdir = rel_to_abs(import.meta.url,"../..")
 	}
 	return rootdir	
+}
+
+function log_file_path(config){
+  let logfile_path = config.log.logfile.default
+  if(hostname() in config.log.logfile){
+    logfile_path = config.log.logfile[hostname()]
+  }
+
+  let date = new Date().toISOString()
+  let date_day = date.split('T')[0]
+  return root_dir()+'/'+logfile_path.replace("(date)",date_day)
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export{
@@ -74,5 +88,7 @@ export{
     suid,
     event,
     window_event,
-    root_dir
+    root_dir,
+    log_file_path,
+    delay
 }
