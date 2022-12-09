@@ -51,12 +51,13 @@ li:hover{
 		const evtSource = new EventSource(ul.getAttribute("data-url"))
 	
 		evtSource.onmessage = (event) => {
-			console.log("Event source")
-			console.log(event.data)
+			const data = JSON.parse(event.data)
+			console.log(`Event source counter = ${data.counter}`)
 		}
 		evtSource.onerror = (err) => {
 			  console.error("EventSource failed:", err);
 			  evtSource.close();
 		};	
 	}
+	setup_sse()
 </script>
