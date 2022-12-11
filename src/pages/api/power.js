@@ -1,6 +1,6 @@
-import * as mqtt from '../../../libs/mqtt.js'
-import {delay} from '../../../libs/utils'
-import {logger} from '../../../libs/logger.js'
+import * as mqtt from '../../libs/mqtt.js'
+import {delay} from '../../libs/utils'
+import {logger} from '../../libs/logger.js'
 
 
 const devices = {
@@ -36,8 +36,10 @@ const devices = {
 
 const devices_list = ["lifx","mesh","poster","pc"]
 
-export async function put({params,request}){
-    const device = params.device
+export async function put({request}){
+  logger.info(`api/power> put()`)
+  const content = await request.json()
+  const device = content.name
     if(!devices_list.includes(device)){
         logger.error(`api/power> no '${device}' device available for control`)
         return new Response(JSON.stringify({state:"off"}), {
@@ -48,7 +50,6 @@ export async function put({params,request}){
           });        
     }
 
-    const content = await request.json()
     if("state" in content){
       if((device !="pc") || (content.state == true)){//pc only goes on not off
         logger.verbose(`api/power> => setting ${device} to ${content.state}`)

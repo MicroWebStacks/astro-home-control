@@ -1,15 +1,17 @@
+import {hostname} from 'os'
 import fs from 'fs'
 import mqtt  from 'mqtt'
 import {logger} from './logger.js'
 import events from 'events'
 import {root_dir} from './utils'
 import * as dotenv from 'dotenv'
+
 dotenv.config()
 
 const connect_options = {
-  clientId : 'astro_control_webapp',
+  clientId : `astro_control_webapp#${hostname()}`,
   keepalive : 60,
-  reconnectPeriod: 3000,
+  //reconnectPeriod: 30000,
   resubscribe: true     //default is true
 }
 
@@ -18,7 +20,9 @@ const publish_options = {qos:2, retain:false}
 
 const Emitter = new events.EventEmitter()
 
-const config = JSON.parse(fs.readFileSync(root_dir()+'/src/config/mqtt.json'))
+const config_file = root_dir()+'/src/config/mqtt.json'
+logger.info(`mqtt> loading config from '${config_file}'`)
+const config = JSON.parse(fs.readFileSync(config_file))
 
 let client = null;
 
@@ -31,28 +35,28 @@ function onConnect(connack) {
 }
 
 function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    logger.warn("mqtt> onConnectionLost() :"+responseObject.errorMessage);
-  }
+  logger.warn("mqtt> onConnectionLost() :"+responseObject.errorMessage);
 }
 
 function onMessageArrived(topic,message) {
-  //logger.debug(`mqtt> ${topic} : ${message}`);
-  Emitter.emit('heat',{topic:topic,msg:message});
-  Emitter.emit('power',{topic:topic,msg:message});
+  //All power topics have "socket" all others are heat
+  if(topic.includes("socket")){
+    Emitter.emit('power',{topic:topic,msg:message});
+  }else{
+    Emitter.emit('heat',{topic:topic,msg:message});
+  }
 }
 
 function start(){
-  logger.info("mqtt> start()");
   if(client == null){
-    logger.info(`mqtt> creating client connection to ${process.env.MQTT_HOST}:${config.mqtt.port}`);
+    logger.info(`mqtt start> connecting (${connect_options.clientId}) to ${process.env.MQTT_HOST}:${config.mqtt.port}`);
     client = mqtt.connect(`mqtt://${process.env.MQTT_HOST}:${config.mqtt.port}`,connect_options);
     client.on('connect',onConnect);
     client.onConnectionLost = onConnectionLost;
     client.on('message',onMessageArrived);
   }
   else if(!client.connected){
-    logger.warn("mqtt> client not connected");
+    logger.warn("mqtt start> client not connected");
   }
 }
 

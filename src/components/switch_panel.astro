@@ -1,22 +1,20 @@
 ---
+import {get_device} from '@/libs/power_state'
 export interface Props {
     name: string;
 }
 
 const { name } = Astro.props as Props;
 
-const device_url = import.meta.env.SERVER+'/api/power/'+name
-const init_state = await fetch(device_url).then((response) => response.json());
-
-const state = init_state.state.toLowerCase()
+const {state,power} = get_device(name)
 const disabled = (name == "pc")?state:false
 ---
-<div class="container" >
+<div class="card" data-name={name}>
     <img src={`/media/${name}-${state}.png`}>
     <h1>{name}</h1>
     <label class="switch">
-        <input  class={`check_in ${(state == "on")?"on":"off"}`} type="checkbox" checked={(state == "on")} 
-                disabled={disabled} data-url={device_url} data-name={name}
+        <input  class={`check_in ${(state == "ON")?"on":"off"}`} type="checkbox" checked={(state == "ON")} 
+                disabled={disabled} data-name={name}
         >
         <span class="slider"></span>
     </label>
@@ -98,15 +96,18 @@ input:disabled.on + .slider{
 <script>
   console.log(" => switch_panel.astro script")
 
-  function setCardState(name,input_el,state){
-    if(state == "on"){
-      input_el.classList.add("on")
-      input_el.classList.remove("off")
+  function card_set_state(name,state){
+    console.log(`card_set_state() ${name} to ${state}`)
+    const card = document.querySelector(`.card[data-name="${name}"]`)
+    const input = card.querySelector("input")
+    if(state == "ON"){
+      input.classList.add("on")
+      input.classList.remove("off")
     }else{
-      input_el.classList.add("off")
-      input_el.classList.remove("on")
+      input.classList.add("off")
+      input.classList.remove("on")
     }
-    const img = input_el.parentElement.parentElement.querySelector("img")
+    const img = card.querySelector("img")
     img.src = `/media/${name}-${state}.png`
   }
 
@@ -118,28 +119,15 @@ input:disabled.on + .slider{
       },
       body: JSON.stringify(data)
     })
-
-    return await response.json()
-  }
-  async function async_get(url){
-    const response = await fetch(url)
     return await response.json()
   }
 
-  function put(name,state,element){
+  function card_toggle_switch(name,state){
     console.log(`   * put() '${name}' at '${state}'`)
-    const device_url = element.getAttribute("data-url")
-    async_put(device_url,{state}).then((resp)=>{
+    
+    async_put("/api/power",{name:name,state:state}).then((resp)=>{
       console.log(resp)
-            setCardState(name,element,resp.state.toLowerCase())
-          });
-  }
-
-  function get(name,element){
-    const device_url = element.getAttribute("data-url")
-    async_get(device_url).then((resp)=>{
-      setCardState(name,element,resp.state.toLowerCase())
-    })
+    });
   }
 
   const input_elements = document.querySelectorAll(".check_in")
@@ -151,12 +139,18 @@ input:disabled.on + .slider{
         element.onchange = (e)=>{
           const device_name = e.target.getAttribute("data-name")
           const state = e.target.checked?"on":"off"
-          put(device_name,state,e.target)
+          card_toggle_switch(device_name,state)
         }
-        //on page reload the dev server reinitializes MQTT and states update asynchronously right after
-        setTimeout(()=>{
-          get(name,element)
-        },500)
     }
+
+  const cards_elements = document.querySelectorAll(".card")
+  const cards = [...cards_elements]
+  for(let card in cards){
+    const element = cards[card]
+    const name = element.getAttribute("data-name")
+    element.addEventListener("update",(event)=>{
+      card_set_state(name,event.detail.state)
+    })
+  }
 
 </script>

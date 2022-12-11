@@ -1,23 +1,20 @@
 ---
 import Layout from "@/layout/Layout.astro";
 import SwitchPanel from "@/components/switch_panel.astro";
-
-console.log("power index.astro")
-const events_url = import.meta.env.SERVER+'/api/events'
 ---
 <Layout title="Heat" >
-	<ul class="power page" data-url={events_url}>
+	<ul class="power page">
 		<li>
-			<SwitchPanel name="mesh"/>
+			<SwitchPanel name="mesh" />
 		</li>
 		<li>
-			<SwitchPanel name="lifx"/>
+			<SwitchPanel name="lifx" />
 		</li>
 		<li>
-			<SwitchPanel name="poster"/>
+			<SwitchPanel name="poster" />
 		</li>
 		<li>
-			<SwitchPanel name="pc"/>
+			<SwitchPanel name="pc" />
 		</li>
 	</ul>
 </Layout>
@@ -46,13 +43,19 @@ li:hover{
 </style>
 
 <script>
+	import {event} from "../../libs/client_utils"
+	function dispatch_power_state(data){
+		["mesh","lifx","poster","pc"].forEach((name)=>{
+			const panel = document.querySelector(`.card[data-name="${name}"]`)
+			event(panel,"update",data[name])
+		})
+		console.log(data)
+	}
 	function setup_sse(){
-		const ul = document.querySelector(".power.page")
-		const evtSource = new EventSource(ul.getAttribute("data-url"))
+		const evtSource = new EventSource("/api/power_events")
 	
 		evtSource.onmessage = (event) => {
-			const data = JSON.parse(event.data)
-			console.log(`Event source counter = ${data.counter}`)
+			dispatch_power_state(JSON.parse(event.data))
 		}
 		evtSource.onerror = (err) => {
 			  console.error("EventSource failed:", err);

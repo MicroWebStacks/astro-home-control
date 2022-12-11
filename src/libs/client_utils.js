@@ -1,3 +1,13 @@
+function event(element,event_name,data=null){
+	var event = new CustomEvent(event_name, {detail:data});
+	element.dispatchEvent(event);
+}
+
+function window_event(event_name,data){
+	var event = new CustomEvent(event_name, {detail:data});
+	window.dispatchEvent(event);
+}
+
 
 async function async_put(url, data) {
   const response = await fetch(url, {
@@ -19,5 +29,7 @@ async function async_fetch(url){
 
 export{
   async_put,
-  async_fetch
+  async_fetch,
+  event,
+  window_event
 }
