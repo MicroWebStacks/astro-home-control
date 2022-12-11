@@ -46,17 +46,25 @@ const heat_url = import.meta.env.SERVER+'/api/heat'
 </style>
 
 <script>
-	const heat_page_ul = document.getElementById("heat_page_ul")
-	const {async_fetch} = await import("../libs/client_utils.js")
-	const apiUrl = heat_page_ul.getAttribute("data-api-url")
 
-	function update_heat_state(devices){
-		console.log(devices)
-	}
-
-	setTimeout(()=>{
-		async_fetch(apiUrl).then((resp)=>{
-			update_heat_state(resp)
+	import {event} from "../libs/client_utils"
+	function dispatch_heat_state(data){
+		["livingroom","bedroom","kitchen","office"].forEach((name)=>{
+			const panel = document.querySelector(`.panel[data-name="${name}"]`)
+			event(panel,"update",data[name])
 		})
-        },500)
+	}
+	function setup_sse(){
+		const evtSource = new EventSource("/api/heat_events")
+	
+		evtSource.onmessage = (event) => {
+			dispatch_heat_state(JSON.parse(event.data))
+		}
+		evtSource.onerror = (err) => {
+			  console.error("EventSource failed:", err);
+			  evtSource.close();
+		};	
+	}
+	setup_sse()
+
 </script>

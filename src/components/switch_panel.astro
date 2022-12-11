@@ -94,6 +94,7 @@ input:disabled.on + .slider{
 </style>
 
 <script>
+	import {async_put} from "../libs/client_utils"
   console.log(" => switch_panel.astro script")
 
   function card_set_state(name,state){
@@ -111,16 +112,6 @@ input:disabled.on + .slider{
     img.src = `/media/${name}-${state}.png`
   }
 
-  async function async_put(url, data) {
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    return await response.json()
-  }
 
   function card_toggle_switch(name,state){
     console.log(`   * put() '${name}' at '${state}'`)

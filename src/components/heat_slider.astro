@@ -14,7 +14,7 @@ const temperature = device.ambient.temperature?device.ambient.temperature+"°":"
 const humidity = device.ambient.humidity?device.ambient.humidity+"%":""
 
 ---
-<div class="container" >
+<div class="panel" data-name={name}>
     <object data={`/media/${name}.svg`} />
     <div class="humidity">{humidity}</div>
     <div class="slider">{temperature}</div>
@@ -24,7 +24,7 @@ const humidity = device.ambient.humidity?device.ambient.humidity+"%":""
 
 <style>
 
-.container{
+.panel{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,6 +62,23 @@ object{
 
 </style>
 
-<script type="module">
+<script>
+  function panel_set_state(name,state){
+    console.log(`panel_set_state() ${name} to ${state}`)
+    const panel = document.querySelector(`.panel[data-name="${name}"]`)
+    
+    //TODO set panel with state
+  }
+
+
+const panels_elements = document.querySelectorAll(".panel")
+  const panels = [...panels_elements]
+  for(let panel in panels){
+    const element = panels[panel]
+    const name = element.getAttribute("data-name")
+    element.addEventListener("update",(event)=>{
+      panel_set_state(name,event.detail.state)
+    })
+  }
 
 </script>

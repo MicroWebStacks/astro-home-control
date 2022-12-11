@@ -46,10 +46,9 @@ li:hover{
 	import {event} from "../../libs/client_utils"
 	function dispatch_power_state(data){
 		["mesh","lifx","poster","pc"].forEach((name)=>{
-			const panel = document.querySelector(`.card[data-name="${name}"]`)
-			event(panel,"update",data[name])
+			const card = document.querySelector(`.card[data-name="${name}"]`)
+			event(card,"update",data[name])
 		})
-		console.log(data)
 	}
 	function setup_sse(){
 		const evtSource = new EventSource("/api/power_events")
