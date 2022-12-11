@@ -1,13 +1,12 @@
 ---
-import { async_put } from '@/libs/utils.js';
+import {get_device} from '@/libs/heat_state'
 export interface Props {
     name: string;
 }
 
 const { name } = Astro.props as Props;
 
-const heat_url = import.meta.env.SERVER+'/api/heat'
-const device = await async_put(heat_url,{device:name})
+const device = get_device(name)
 console.log(` => from heat_slider ${name} : temperature = ${device.ambient.temperature}`)
 
 const temperature = device.ambient.temperature?device.ambient.temperature+"°":""
@@ -60,13 +59,21 @@ object{
   height:30px;
 }
 
+div{
+  color: black;
+  padding:10px;
+}
 </style>
 
 <script>
-  function panel_set_state(name,state){
-    console.log(`panel_set_state() ${name} to ${state}`)
+  function panel_set_state(name,device){
     const panel = document.querySelector(`.panel[data-name="${name}"]`)
-    
+    if(device.ambient.temperature){
+      panel.querySelector(".slider").textContent = device.ambient.temperature+"°"
+    }
+    if(device.ambient.humidity){
+      panel.querySelector(".humidity").textContent = device.ambient.humidity+"%"
+    }
     //TODO set panel with state
   }
 
@@ -77,7 +84,7 @@ const panels_elements = document.querySelectorAll(".panel")
     const element = panels[panel]
     const name = element.getAttribute("data-name")
     element.addEventListener("update",(event)=>{
-      panel_set_state(name,event.detail.state)
+      panel_set_state(name,event.detail)
     })
   }
 

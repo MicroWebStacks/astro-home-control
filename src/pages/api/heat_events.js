@@ -1,5 +1,5 @@
 import {logger} from '@/libs/logger.js'
-import {SSE_Emitter} from '@/libs/power_state'
+import {SSE_Emitter} from '@/libs/heat_state'
 
 let sse_controller = null
 

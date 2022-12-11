@@ -1,7 +1,7 @@
 import {delay} from '@/libs/utils'
 import {logger} from '@/libs/logger.js'
 import  {get_devices} from '@/libs/power_state'
-
+import {publish} from '@/libs/mqtt'
 
 export async function put({request}){
   logger.info(`api/power> put()`)
@@ -24,9 +24,8 @@ export async function put({request}){
         logger.verbose(`api/power> => setting ${device} to ${content.state}`)
         const topic = devices[device].control
         const value = JSON.stringify({state:content.state.toUpperCase()})
-        mqtt.publish(topic,value)
+        publish(topic,value)
         logger.verbose(`api/power> publish '${topic}' => '${value}'`)
-        logger.verbose(`api/power> client.connected = '${mqtt.client.connected}'`)
         await delay(1000)
       }
     }

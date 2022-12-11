@@ -4,11 +4,9 @@ import HeatSlider from "@/components/heat_slider.astro";
 
 console.log("heat main index.astro")
 
-const baseUrl = import.meta.env.BASE_URL.slice(0, -1)
-const heat_url = import.meta.env.SERVER+'/api/heat'
 ---
 <Layout title="Heat" >
-	<ul id="heat_page_ul" data-base-url={baseUrl} data-api-url={heat_url}>
+	<ul id="heat_page_ul" >
 		<li>
 			<HeatSlider name="livingroom"/>
 		</li>
@@ -51,6 +49,7 @@ const heat_url = import.meta.env.SERVER+'/api/heat'
 	function dispatch_heat_state(data){
 		["livingroom","bedroom","kitchen","office"].forEach((name)=>{
 			const panel = document.querySelector(`.panel[data-name="${name}"]`)
+			console.log(`panel ${name} update`)
 			event(panel,"update",data[name])
 		})
 	}

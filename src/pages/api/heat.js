@@ -8,7 +8,7 @@ export async function put({params,request}){
   const devices = get_devices()
   const devices_list = Object.keys(devices)
 
-  if((!"device" in reqj) ||(!devices_list.includes(reqj.device))){
+  if((!"device" in content) ||(!devices_list.includes(content.device))){
     logger.error(`api/heat> no '${device}' device available for control`)
     return new Response({}, {
         status: 404,
