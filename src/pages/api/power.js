@@ -40,6 +40,7 @@ export async function put({request}){
       });    
 }
 
+//not used by app as SSE are sent
 export async function get({params}){
 
   const devices = get_devices()

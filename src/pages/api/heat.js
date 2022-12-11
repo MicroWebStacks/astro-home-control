@@ -1,90 +1,12 @@
-import { logger } from '../../libs/logger.js'
-import * as mqtt from '../../libs/mqtt.js'
-
-const devices = {
-  livingroom:{
-      name:"Livingroom",
-      heater:{
-          topic:"lzig/living heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/livingroom tag"
-      },
-      metal:{
-          topic:"lzig/living heat weather",
-          data:{}
-      }
-  },
-  bedroom:{
-      name:"Bedroom",
-      heater:{
-          topic:"lzig/bedroom heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/bedroom tag"
-      },
-      metal:{
-          topic:"lzig/bedroom heat weather",
-          data:{}
-      }
-  },
-  kitchen:{
-      name:"Kitchen",
-      heater:{
-          topic:"lzig/kitchen heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/kitchen tag"
-      },
-      metal:{
-          topic:"lzig/kitchen heat weather",
-          data:{}
-      }
-  },
-  bathroom:{
-      name:"Bathroom",
-      heater:{
-          topic:"lzig/bathroom heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/bathroom tag"
-      },
-      metal:{
-          topic:"lzig/bathroom heat weather",
-          data:{}
-      }
-  },
-  office:{
-      name:"Office",
-      heater:{
-          topic:"lzig/office heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/office tag"
-      },
-      metal:{
-          topic:"lzig/office heat weather",
-          data:{}
-      }
-  }
-}
-
-const devices_list = ["livingroom","bedroom","kitchen","bathroom","office"]
+import { logger } from '@/libs/logger.js'
+import {get_devices} from '@/libs/heat_state'
 
 export async function put({params,request}){
   logger.verbose("api/heat> put()")
-  const reqj = await request.json()
-  console.log(reqj)
+  const content = await request.json()
+  const device = content.name
+  const devices = get_devices()
+  const devices_list = Object.keys(devices)
 
   if((!"device" in reqj) ||(!devices_list.includes(reqj.device))){
     logger.error(`api/heat> no '${device}' device available for control`)
@@ -96,6 +18,8 @@ export async function put({params,request}){
     });        
   }
 
+  //TODO publish content to MQTT
+
   return new Response(JSON.stringify(devices[reqj.device]), {
       status: 200,
       headers: {
@@ -104,10 +28,23 @@ export async function put({params,request}){
     });    
 }
 
+//not used by app as SSE are sent
 export async function get(){
-  logger.verbose("api/heat> get()")
+  const devices = get_devices()
+  const device = params.device
+  if(!Object.keys(devices).includes(device)){
+      logger.error(`api/heat> device : '${device}' not available`)
+      return new Response(JSON.stringify({state:"off"}), {
+        status: 404,
+        statusText: `No ${device} device available`,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });        
+  }
 
-  return new Response(JSON.stringify(devices), {
+  logger.verbose(`api/heat> get() ${device} = ${devices[device].name}`)
+  return new Response(JSON.stringify({device:devices[device]}), {
       status: 200,
       headers: {
         "Content-Type": "application/json"
@@ -115,28 +52,5 @@ export async function get(){
     });    
 }
 
-mqtt.Emitter.on('heat',(data)=>{
-  try{
-    for (const [name, value] of Object.entries(devices)) {
-      if(data.topic == value.heater.topic){
-        value.heater.data = JSON.parse(data.msg)
-        logger.debug(`api/heat> ${name} updated heater`)
-      }else if(data.topic == value.ambient.topic){
-        const measures = JSON.parse(data.msg)
-        if("temperature" in measures){
-          value.ambient.temperature = measures.temperature
-          value.ambient.humidity = measures.humidity
-          logger.debug(`api/heat> ${name} updated temperature humidity`)
-        }
-      }else if(data.topic == value.metal.topic){
-        value.metal.data = JSON.parse(data.msg)
-        logger.debug(`api/heat> ${name} updated metal heat`)
-      }
-    }
-  }catch(e){
-    logger.info(`api/heat> Handling all exceptions : ${e.message}`)
-  }
-})
-
 logger.info("api/heat> init")
-mqtt.start()
+

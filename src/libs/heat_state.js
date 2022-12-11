@@ -82,8 +82,6 @@ const devices = {
   }
 }
 
-const devices_list = ["livingroom","bedroom","kitchen","bathroom","office"]
-
 function get_devices(){
   return devices
 }
@@ -92,31 +90,38 @@ function get_device(name){
   return devices[name]
 }
 
-function set_device(name,state,power){
-  devices[name].state = state
-  devices[name].power = power
-  logger.debug(`api/power> ${name} updated to ${state} (${power} W)`)
+function set_device(name,subdevice,data){
+  if(subdevice == "ambient"){
+    if("temperature" in data){//these messages alternate between light and temp,hum,...
+      devices[name].ambient.temperature = data.temperature
+      devices[name].ambient.humidity = data.humidity
+    }
+  }else{
+    devices[name][subdevice].data = data
+  }
+  logger.debug(`api/heat> ${name} updated`)
 }
 
 //just for the import to ensure running body once
 function start(){
-  logger.info("power_state> start()")
+  logger.info("heat_state> start()")
 }
 
 //run once 
-logger.info("power_state> init")
+logger.info("heat_state> init")
 mqtt.start()
 
-mqtt.Emitter.on('power',(data)=>{
+mqtt.Emitter.on('heat',(data)=>{
   try{
     for (const [name, value] of Object.entries(devices)) {
-      if(data.topic == value.topic){
-        const obj = JSON.parse(data.msg)
-        set_device(name,obj.state,obj.power)
-      }
+      ["heater","ambient","metal"].forEach((subdevice)=>{
+        if(data.topic == value[subdevice].topic){
+          set_device(name,subdevice,JSON.parse(data.msg))
+        }
+      })
     }
-    logger.verbose("power_state> mqtt.Emitter->SSE_Emitter 'power'")
-    SSE_Emitter.emit('power',devices)//could debounce, but then adds latency
+    logger.verbose("heat_state> mqtt.Emitter->SSE_Emitter 'heat'")
+    SSE_Emitter.emit('heat',devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)
   }
