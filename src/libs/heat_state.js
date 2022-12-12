@@ -100,6 +100,7 @@ function set_device(name,subdevice,data){
     devices[name][subdevice].data = data
   }
   logger.debug(`api/heat> ${name} updated`)
+  return devices[name]
 }
 
 //just for the import to ensure running body once
@@ -113,15 +114,16 @@ mqtt.start()
 
 mqtt.Emitter.on('heat',(data)=>{
   try{
+    let updated_devices = {}
     for (const [name, value] of Object.entries(devices)) {
       ["heater","ambient","metal"].forEach((subdevice)=>{
         if(data.topic == value[subdevice].topic){
-          set_device(name,subdevice,JSON.parse(data.msg))
+          updated_devices[name] = set_device(name,subdevice,JSON.parse(data.msg))
         }
       })
     }
-    logger.verbose("heat_state> mqtt.Emitter->SSE_Emitter 'heat'")
-    SSE_Emitter.emit('heat',devices)//could debounce, but then adds latency
+    logger.verbose(`heat_state> mqtt.Emitter.on(heat) ${data.topic}`)
+    SSE_Emitter.emit('heat',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)
   }

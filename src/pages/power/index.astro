@@ -1,20 +1,20 @@
 ---
 import Layout from "@/layout/Layout.astro";
-import SwitchPanel from "@/components/switch_card.astro";
+import SwitchCard from "@/components/switch_card.astro";
 ---
 <Layout title="Heat" >
 	<ul class="power page">
 		<li>
-			<SwitchPanel name="mesh" />
+			<SwitchCard name="mesh" />
 		</li>
 		<li>
-			<SwitchPanel name="lifx" />
+			<SwitchCard name="lifx" />
 		</li>
 		<li>
-			<SwitchPanel name="poster" />
+			<SwitchCard name="poster" />
 		</li>
 		<li>
-			<SwitchPanel name="pc" />
+			<SwitchCard name="pc" />
 		</li>
 	</ul>
 </Layout>
@@ -44,8 +44,9 @@ li:hover{
 
 <script>
 	import {event} from "../../libs/client_utils"
+	console.log("client:power> script()")
 	function dispatch_power_state(data){
-		["mesh","lifx","poster","pc"].forEach((name)=>{
+		Object.keys(data).forEach((name)=>{
 			const card = document.querySelector(`.card[data-name="${name}"]`)
 			event(card,"update",data[name])
 		})

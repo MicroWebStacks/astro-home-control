@@ -1,17 +1,14 @@
 import {logger} from '@/libs/logger.js'
 import {SSE_Emitter} from '@/libs/heat_state'
 
-let sse_controller = null
-
 export async function get({request}){
 
-    logger.info("api/events> get()")
+    logger.info("heat_events> get()")
     
     //const data = `data: ${JSON.stringify({message:"First"})}\n\n`;
     const body = new ReadableStream({
         start(controller){
-            sse_controller = controller
-            SSE_Emitter.on('heat',(devices)=>{
+            const events_listener = (devices)=>{
                 if(controller){
                     logger.info("heat_events> SSE_Emitter 'heat'")
                     const data = `data: ${JSON.stringify(devices)}\r\n\r\n`;
@@ -19,7 +16,9 @@ export async function get({request}){
                 }else{
                     logger.warn("heat_events> no sse_controller")
                 }
-            })
+            }
+            SSE_Emitter.off('heat',events_listener)
+            SSE_Emitter.on('heat',events_listener)
         },
         cancel(){
             logger.info("heat_events> cancel() closing")

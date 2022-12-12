@@ -48,6 +48,7 @@ function set_device(name,state,power){
   devices[name].state = state
   devices[name].power = power
   logger.debug(`api/power> ${name} updated to ${state} (${power} W)`)
+  return devices[name]
 }
 
 //just for the import to ensure running body once
@@ -61,14 +62,15 @@ mqtt.start()
 
 mqtt.Emitter.on('power',(data)=>{
   try{
+    let updated_devices = {}
     for (const [name, value] of Object.entries(devices)) {
       if(data.topic == value.topic){
         const obj = JSON.parse(data.msg)
-        set_device(name,obj.state,obj.power)
+        updated_devices[name] = set_device(name,obj.state,obj.power)
       }
     }
-    logger.verbose("power_state> mqtt.Emitter->SSE_Emitter 'power'")
-    SSE_Emitter.emit('power',devices)//could debounce, but then adds latency
+    logger.verbose(`power_state> mqtt.Emitter.on(power) ${data.topic}`)
+    SSE_Emitter.emit('power',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)
   }

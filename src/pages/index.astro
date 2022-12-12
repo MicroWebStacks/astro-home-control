@@ -44,10 +44,10 @@ console.log("heat main index.astro")
 </style>
 
 <script>
-
 	import {event} from "../libs/client_utils"
+	console.log("client:heat> script()")
 	function dispatch_heat_state(data){
-		["livingroom","bedroom","kitchen","office"].forEach((name)=>{
+		Object.keys(data).forEach((name)=>{
 			const panel = document.querySelector(`.panel[data-name="${name}"]`)
 			console.log(`panel ${name} update`)
 			event(panel,"update",data[name])
