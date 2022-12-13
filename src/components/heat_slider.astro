@@ -1,5 +1,6 @@
 ---
 import {get_device} from '@/libs/heat_state'
+import Svg from '@/components/svgicons.astro'
 export interface Props {
     name: string;
 }
@@ -10,15 +11,22 @@ const device = get_device(name)
 console.log(` => from heat_slider ${name} : temperature = ${device.ambient.temperature}`)
 
 const temperature = device.ambient.temperature?device.ambient.temperature+"°":""
-const humidity = device.ambient.humidity?device.ambient.humidity+"%":""
+const humidity = device.ambient.humidity?Math.round(device.ambient.humidity)+"%":""
+const time = device.heater.last_seen_mn?device.heater.last_seen_mn:""
 
 ---
 <div class="panel" data-name={name}>
     <object data={`/media/${name}.svg`} />
-    <div class="humidity">{humidity}</div>
+    <div class="humidity">
+      <Svg filename="drop" />
+      <span class="humidity value">{humidity}</span>
+    </div>
     <div class="slider">{temperature}</div>
     <div class="valve"></div>
-    <div class="last"></div>
+    <div class="signal">
+      <Svg filename="signal" />
+      <span class="signal value">{time}</span>
+    </div>
 </div>
 
 <style>
@@ -37,9 +45,18 @@ object{
 }
 
 .humidity{
-  background-color: aquamarine;
   width:150px;
   height:50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.humidity.value{
+  width: 64px;
+  font-size:1.5em;
+  color:rgb(178, 220, 249);
+}
+.humidity.drop{
 }
 
 .slider{
@@ -54,9 +71,18 @@ object{
   height:60px;
 }
 
-.last{
+.signal{
   width:150px;
   height:30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.signal.value{
+  width: 48px;
+  margin-left:10px;
+  padding-top: 3px;
+  color: rgb(208, 205, 165);
 }
 
 div{
@@ -72,7 +98,10 @@ div{
       panel.querySelector(".slider").textContent = device.ambient.temperature+"°"
     }
     if(device.ambient.humidity){
-      panel.querySelector(".humidity").textContent = device.ambient.humidity+"%"
+      panel.querySelector(".humidity.value").textContent = Math.round(device.ambient.humidity)+"%"
+    }
+    if(device.ambient.heater){
+      panel.querySelector(".signal.value").textContent = device.heater.last_seen_mn
     }
     //TODO set panel with state
   }

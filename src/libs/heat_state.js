@@ -2,6 +2,8 @@ import {logger} from './logger.js'
 import * as mqtt from '@/libs/mqtt.js'
 import events from 'events'
 
+import { convert_last_seen_minutes } from './utils.js'
+
 const SSE_Emitter = new events.EventEmitter()
 
 const devices = {
@@ -115,14 +117,18 @@ mqtt.start()
 mqtt.Emitter.on('heat',(data)=>{
   try{
     let updated_devices = {}
-    for (const [name, value] of Object.entries(devices)) {
+    for (const [name, device] of Object.entries(devices)) {
       ["heater","ambient","metal"].forEach((subdevice)=>{
-        if(data.topic == value[subdevice].topic){
+        if(data.topic == device[subdevice].topic){
           updated_devices[name] = set_device(name,subdevice,JSON.parse(data.msg))
+          if(updated_devices[name].heater.data.last_seen){
+            updated_devices[name].heater.last_seen_mn = convert_last_seen_minutes(updated_devices[name].heater.data)
+            //console.log(`${name} ${subdevice} last seen : ${updated_devices[name].heater.last_seen_mn}`)
+          }
         }
       })
     }
-    logger.verbose(`heat_state> mqtt.Emitter.on(heat) ${data.topic}`)
+    logger.info(`heat_state> mqtt.Emitter.on(heat) ${data.topic}`)
     SSE_Emitter.emit('heat',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)

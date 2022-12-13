@@ -69,7 +69,7 @@ mqtt.Emitter.on('power',(data)=>{
         updated_devices[name] = set_device(name,obj.state,obj.power)
       }
     }
-    logger.verbose(`power_state> mqtt.Emitter.on(power) ${data.topic}`)
+    logger.info(`power_state> mqtt.Emitter.on(power) ${data.topic}`)
     SSE_Emitter.emit('power',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)

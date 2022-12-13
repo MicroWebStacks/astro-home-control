@@ -101,6 +101,24 @@ async function async_fetch(url){
 }
 
 
+function convert_last_seen_minutes(sensor){
+  let result = "No info"
+  if("last_seen" in sensor){
+    console.log(sensor["last_seen"])
+    let diff = Date.now() - Date.parse(sensor["last_seen"]);
+    if(diff < 0){
+      diff = 0;//avoids small clocks discrepancies
+    }
+    let nb_min = Math.floor(diff / (60*1000));
+    if(nb_min < 60){
+      result = nb_min+" mn";
+    }else if(nb_min > 60){
+      let nb_h = Math.floor(nb_min / 60);
+      result = nb_h+" h";
+    }
+  }
+  return result
+}
 
 
 export{
@@ -114,5 +132,6 @@ export{
     log_file_path,
     delay,
     async_put,
-    async_fetch
+    async_fetch,
+    convert_last_seen_minutes
   }

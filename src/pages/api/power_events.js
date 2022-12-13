@@ -9,7 +9,7 @@ export async function get({request}){
             start(controller){
                 const events_listener = (devices)=>{
                     if(controller){
-                        logger.info("power_events> SSE_Emitter 'power'")
+                        logger.verbose("power_events> SSE_Emitter 'power'")
                         const data = `data: ${JSON.stringify(devices)}\r\n\r\n`;
                         controller.enqueue(data)
                     }else{
