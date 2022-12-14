@@ -25,7 +25,6 @@ export async function put({request}){
         const topic = devices[device].control
         const value = JSON.stringify({state:content.state.toUpperCase()})
         publish(topic,value)
-        logger.verbose(`api/power> publish '${topic}' => '${value}'`)
         await delay(1000)
       }
     }

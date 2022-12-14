@@ -104,7 +104,6 @@ async function async_fetch(url){
 function convert_last_seen_minutes(sensor){
   let result = "No info"
   if("last_seen" in sensor){
-    console.log(sensor["last_seen"])
     let diff = Date.now() - Date.parse(sensor["last_seen"]);
     if(diff < 0){
       diff = 0;//avoids small clocks discrepancies

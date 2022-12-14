@@ -4,8 +4,7 @@ import events from 'events'
 
 const SSE_Emitter = new events.EventEmitter()
 
-
-let devices = {
+const devices = {
   poster:{
       topic:"lzig/poster socket",
       control:"lzig/poster socket/set",
@@ -47,7 +46,7 @@ function get_device(name){
 function set_device(name,state,power){
   devices[name].state = state
   devices[name].power = power
-  logger.debug(`api/power> ${name} updated to ${state} (${power} W)`)
+  logger.info(`api/power> ${name} updated to ${state} (${power} W)`)
   return devices[name]
 }
 
@@ -69,7 +68,7 @@ mqtt.Emitter.on('power',(data)=>{
         updated_devices[name] = set_device(name,obj.state,obj.power)
       }
     }
-    logger.info(`power_state> mqtt.Emitter.on(power) ${data.topic}`)
+    logger.verbose(`power_state> mqtt.Emitter.on(power) ${data.topic}`)
     SSE_Emitter.emit('power',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)

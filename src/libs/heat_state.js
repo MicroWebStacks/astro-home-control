@@ -101,7 +101,10 @@ function set_device(name,subdevice,data){
   }else{
     devices[name][subdevice].data = data
   }
-  logger.debug(`api/heat> ${name} updated`)
+  if(devices[name].heater.data.last_seen){
+    devices[name].heater.last_seen_mn = convert_last_seen_minutes(devices[name].heater.data)
+  }
+  logger.info(`api/heat> ${name} updated`)
   return devices[name]
 }
 
@@ -121,14 +124,10 @@ mqtt.Emitter.on('heat',(data)=>{
       ["heater","ambient","metal"].forEach((subdevice)=>{
         if(data.topic == device[subdevice].topic){
           updated_devices[name] = set_device(name,subdevice,JSON.parse(data.msg))
-          if(updated_devices[name].heater.data.last_seen){
-            updated_devices[name].heater.last_seen_mn = convert_last_seen_minutes(updated_devices[name].heater.data)
-            //console.log(`${name} ${subdevice} last seen : ${updated_devices[name].heater.last_seen_mn}`)
-          }
         }
       })
     }
-    logger.info(`heat_state> mqtt.Emitter.on(heat) ${data.topic}`)
+    logger.verbose(`heat_state> mqtt.Emitter.on(heat) ${data.topic}`)
     SSE_Emitter.emit('heat',updated_devices)//could debounce, but then adds latency
   }catch(e){
     logger.error(`Handling all exceptions : ${e.message}`)
