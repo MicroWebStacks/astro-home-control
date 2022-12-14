@@ -1,6 +1,7 @@
 ---
 import {get_device} from '@/libs/heat_state'
 import Svg from '@/components/svgicons.astro'
+import CircularProgress from './circular_progress.astro';
 export interface Props {
     name: string;
 }
@@ -13,6 +14,7 @@ console.log(` => from heat_slider ${name} : temperature = ${device.ambient.tempe
 const temperature = device.ambient.temperature?device.ambient.temperature+"°":""
 const humidity = device.ambient.humidity?Math.round(device.ambient.humidity)+"%":""
 const time = device.heater.last_seen_mn?device.heater.last_seen_mn:""
+const valve_percent = device.heater.data.pi_heating_demand
 
 ---
 <div class="panel" data-name={name}>
@@ -22,7 +24,9 @@ const time = device.heater.last_seen_mn?device.heater.last_seen_mn:""
       <span class="humidity value">{humidity}</span>
     </div>
     <div class="slider">{temperature}</div>
-    <div class="valve"></div>
+    <div class="valve">
+      <CircularProgress percent={valve_percent}/>
+    </div>
     <div class="signal">
       <Svg filename="signal" />
       <span class="signal value">{time}</span>
@@ -66,9 +70,10 @@ object{
 }
 
 .valve{
-  background-color: brown;
   width:150px;
   height:60px;
+  display:flex;
+  justify-content: center;
 }
 
 .signal{
@@ -89,9 +94,17 @@ div{
   color: black;
   padding:10px;
 }
+
+</style>
+
+<style is:inline>
+.valve > svg{
+  width:48px;
+}
 </style>
 
 <script>
+	import {event} from "../libs/client_utils"
   function panel_set_state(name,device){
     const panel = document.querySelector(`.panel[data-name="${name}"]`)
     if(device.ambient.temperature){
@@ -100,8 +113,10 @@ div{
     if(device.ambient.humidity){
       panel.querySelector(".humidity.value").textContent = Math.round(device.ambient.humidity)+"%"
     }
-    if(device.ambient.heater){
+    if(device.heater){
       panel.querySelector(".signal.value").textContent = device.heater.last_seen_mn
+      const valve = panel.querySelector(".valve.range")
+      event(valve,'range',device.heater.data.pi_heating_demand)
     }
     //TODO set panel with state
   }

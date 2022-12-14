@@ -1,0 +1,28 @@
+---
+export interface Props {
+    percent: number;
+}
+
+const { percent } = Astro.props as Props;
+
+---
+
+<div class="valve range">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="-22 -22 44 44" xml:space="preserve" >
+        <circle cx="0" cy="0" r="19" fill="none" stroke-width="6" stroke="#aaa"></circle>
+        <circle cx="0" cy="0" r="19" fill="none" stroke-width="6" stroke="brown" class="range"
+        style={`stroke-linecap: round; transform:rotate(-90deg); stroke-dasharray:125.6; stroke-dashoffset: ${125.6-(125.6*percent/100)};`}
+        ></circle>
+    </svg>
+</div>
+
+<script>
+    document.querySelectorAll(".valve.range").forEach((valve)=>{
+        valve.addEventListener('range',(event)=>{
+            const circle = event.target.querySelector("circle.range")
+            const percent = event.detail
+            circle.style.strokeDashoffset = 125.6-(125.6*percent/100)
+        })
+    })
+</script>
