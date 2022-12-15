@@ -2,6 +2,7 @@
 import {get_device} from '@/libs/heat_state'
 import Svg from '@/components/svgicons.astro'
 import CircularProgress from './circular_progress.astro';
+import SliderInfo from './slider_info.astro'
 export interface Props {
     name: string;
 }
@@ -11,10 +12,10 @@ const { name } = Astro.props as Props;
 const device = get_device(name)
 console.log(` => from heat_slider ${name} : temperature = ${device.ambient.temperature}`)
 
-const temperature = device.ambient.temperature?device.ambient.temperature+"°":""
+const temperature = device.ambient.temperature
 const humidity = device.ambient.humidity?Math.round(device.ambient.humidity)+"%":""
 const time = device.heater.last_seen_mn?device.heater.last_seen_mn:""
-const valve_percent = device.heater.data.pi_heating_demand
+const valve_percent = device.heater.data.pi_heating_demand?device.heater.data.pi_heating_demand:0
 
 ---
 <div class="panel" data-name={name}>
@@ -23,7 +24,9 @@ const valve_percent = device.heater.data.pi_heating_demand
       <Svg filename="drop" />
       <span class="humidity value">{humidity}</span>
     </div>
-    <div class="slider">{temperature}</div>
+    <div class="slider">
+      <SliderInfo cursor={20} target={20} room={19} metal={27}/>
+    </div>
     <div class="valve">
       <CircularProgress percent={valve_percent}/>
     </div>
@@ -64,9 +67,11 @@ object{
 }
 
 .slider{
-  background-color:azure;
-  height:50vh;
+  background-color:#BDC0BE;
+  height:400px;
   width:150px;
+  padding:0px;
+  border-radius: 5px;
 }
 
 .valve{
@@ -108,7 +113,8 @@ div{
   function panel_set_state(name,device){
     const panel = document.querySelector(`.panel[data-name="${name}"]`)
     if(device.ambient.temperature){
-      panel.querySelector(".slider").textContent = device.ambient.temperature+"°"
+      const slider = panel.querySelector(".slider")
+      event(slider,'slider',{room:device.ambient.temperature})
     }
     if(device.ambient.humidity){
       panel.querySelector(".humidity.value").textContent = Math.round(device.ambient.humidity)+"%"
@@ -117,6 +123,10 @@ div{
       panel.querySelector(".signal.value").textContent = device.heater.last_seen_mn
       const valve = panel.querySelector(".valve.range")
       event(valve,'range',device.heater.data.pi_heating_demand)
+      const slider = panel.querySelector(".slider")
+      event(slider,'slider',{
+        target:device.heater.data.current_heating_setpoint
+      })
     }
     //TODO set panel with state
   }

@@ -48,6 +48,9 @@ li:hover{
 	function dispatch_power_state(data){
 		Object.keys(data).forEach((name)=>{
 			const card = document.querySelector(`.card[data-name="${name}"]`)
+			if(!card){
+				console.log(name)
+			}
 			event(card,"update",data[name])
 		})
 	}
