@@ -1,4 +1,5 @@
 ---
+import { room_to_coord,metal_to_coord,target_to_coord } from './slider_info';
 export interface Props {
     cursor: number;
     target: number;
@@ -7,53 +8,32 @@ export interface Props {
 }
 
 const { cursor, target, room, metal } = Astro.props as Props;
-const height = 400
 
-const heat_27_y = 100
-const heat_5_y = height - 50
-const heat_height = heat_27_y - heat_5_y
-
-const metal_height = heat_27_y
-const metal_27_y = heat_27_y
-
-const target_height = heat_5_y - heat_27_y
-
-function room_section_1(input){
-    const res_y = (heat_height * (input-5) / (27-5)) + heat_5_y
-    const res_h = height - res_y
-    return [res_y,res_h]
-}
-function metal_section_2(input){
-    const res_y = (metal_height * (input-27) / (27-55)) + metal_27_y
-    const res_h = height - res_y
-    return [res_y,res_h]
-}
-function target_section(input){
-    const res_y = (heat_height * (input-5) / (27-5)) + heat_5_y
-    const res_h = (target_height * (input-5) / (27-5))
-    return [res_y,res_h]
+const config = {
+    height: 400,
+    top_limit_height: 100,
+    bottom_limit_height:50,
+    min_room_temp: 5,
+    max_room_temp: 27,
+    max_metal_temp: 55
 }
 
-const [room_y, room_h] = room_section_1(room)
+const room_min_temp_y = config.height - config.bottom_limit_height
 
-let metal_y,metal_h
-if(metal < 27){
-    [metal_y,metal_h] = room_section_1(metal)
-}else{
-    [metal_y,metal_h] = metal_section_2(metal)
-}
+const room_coord = room_to_coord(room,config)
+const metal_coord = metal_to_coord(metal,config)
 
-const [target_y,target_h] = target_section(target)
+const target_coord = target_to_coord(target,config)
 
 ---
 <div class="slidecontainer">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 150 400" >
-         <rect id="metal"           x="35" y={metal_y}  width="80" height={metal_h} fill="#EEBEBE"/>
-         <rect id="room"            x="0"  y={room_y}   rx="5" ry="5" width="150" height={room_h} fill="#BADCAE"/>
-         <rect id="top_target"      x="65" y="0"        width="20" height={heat_27_y} fill="#8F8F8F"/>
-         <rect id="target"          x="65" y={target_y}      width="20" height={target_h} fill="#B54949"/>
-         <rect id="bottom_target"   x="65" y={heat_5_y}      width="20" height={50} fill="#8F8F8F"/>
+         <rect id="metal"           x="35" y={metal_coord.y}  width="80" height={metal_coord.h} fill="#EEBEBE"/>
+         <rect id="room"            x="0"  y={room_coord.y}   rx="5" ry="5" width="150" height={room_coord.h} fill="#BADCAE"/>
+         <rect id="top_target"      x="65" y="0"        width="20" height={config.top_limit_height} fill="#8F8F8F"/>
+         <rect id="target"          x="65" y={target_coord.y}      width="20" height={target_coord.h} fill="#B54949"/>
+         <rect id="bottom_target"   x="65" y={room_min_temp_y}      width="20" height={config.bottom_limit_height} fill="#8F8F8F"/>
         </svg>
     <input class="slider" orient="vertical" type="range" step="1" value={cursor} min="5" max="27">
     <span class="range-value"></span>
