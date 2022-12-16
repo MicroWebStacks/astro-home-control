@@ -1,5 +1,5 @@
 ---
-import { room_to_coord,metal_to_coord,target_to_coord } from './slider_info';
+import { config,room_to_coord,metal_to_coord,target_to_coord } from './slider_info';
 export interface Props {
     cursor: number;
     target: number;
@@ -9,39 +9,36 @@ export interface Props {
 
 const { cursor, target, room, metal } = Astro.props as Props;
 
-const config = {
-    height: 400,
-    top_limit_height: 100,
-    bottom_limit_height:50,
-    min_room_temp: 5,
-    max_room_temp: 27,
-    max_metal_temp: 55
-}
 
 const room_min_temp_y = config.height - config.bottom_limit_height
+const track_height = room_min_temp_y - config.top_limit_height
 
-const room_coord = room_to_coord(room,config)
-const metal_coord = metal_to_coord(metal,config)
+const room_coord = room_to_coord(room)
+const metal_coord = metal_to_coord(metal)
 
-const target_coord = target_to_coord(target,config)
+const target_coord = target_to_coord(target)
 
 ---
-<div class="slidecontainer">
+<div class="slidercontainer" >
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 150 400" >
-         <rect id="metal"           x="35" y={metal_coord.y}  width="80" height={metal_coord.h} fill="#EEBEBE"/>
-         <rect id="room"            x="0"  y={room_coord.y}   rx="5" ry="5" width="150" height={room_coord.h} fill="#BADCAE"/>
-         <rect id="top_target"      x="65" y="0"        width="20" height={config.top_limit_height} fill="#8F8F8F"/>
-         <rect id="target"          x="65" y={target_coord.y}      width="20" height={target_coord.h} fill="#B54949"/>
-         <rect id="bottom_target"   x="65" y={room_min_temp_y}      width="20" height={config.bottom_limit_height} fill="#8F8F8F"/>
+         <rect class="room"            x="0"  y={room_coord.y}   rx="5" ry="5" width="150" height={room_coord.h} fill="#f7e9e9"/>
+         <rect class="metal"           x="35" y={metal_coord.y}  width="80" height={metal_coord.h} fill="#f5d3d3"/>
+         <rect class="top_target"      x="65" y="0"        width="20" height={config.top_limit_height} fill="#8F8F8F"/>
+         <rect class="track"           x="65" y={config.top_limit_height}   width="20" height={track_height} fill="#707070"/>
+         <rect class="target"          x="65" y={target_coord.y}      width="20" height={target_coord.h} fill="#B54949"/>
+         <rect class="bottom_target"   x="65" y={room_min_temp_y}      width="20" height={config.bottom_limit_height} fill="#8F8F8F"/>
         </svg>
     <input class="slider" orient="vertical" type="range" step="1" value={cursor} min="5" max="27">
     <span class="range-value"></span>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 40">
+        <text x="65" y="20" class="cursor">{`${target}°`}</text>
+    </svg>
 </div> 
 
 
 <style>
-.slidecontainer{
+.slidercontainer{
     position: relative;
 }
 svg {
@@ -68,4 +65,54 @@ input::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: -3px 0px 5px black;
 }
+text.cursor{
+    fill: black;
+    font: bold 12px sans-serif;
+    
+    user-select: none;
+}
 </style>
+
+<script>
+	import {async_put} from "../libs/client_utils"
+    import { room_to_coord,metal_to_coord,target_to_coord } from './slider_info';
+    function handle_update(container,data){
+        if(data.room){
+            const room_coord = room_to_coord(data.room)
+            const rect = container.querySelector(".room")
+            rect.setAttribute('y',room_coord.y)
+            rect.setAttribute('height',room_coord.h)
+        }
+        if(data.target){
+            const target_coord = target_to_coord(data.target)
+            const rect = container.querySelector(".target")
+            rect.setAttribute('y',target_coord.y)
+            rect.setAttribute('height',target_coord.h)
+            container.querySelector(".slider").value = data.target
+            const text = container.querySelector("text.cursor")
+            //text.setAttribute('y',target_coord.y)
+            text.textContent = data.target+'°'
+        }
+        if(data.metal){
+            const metal_coord = metal_to_coord(data.metal)
+            const rect = container.querySelector(".metal")
+            rect.setAttribute('y',metal_coord.y+8)
+            rect.setAttribute('height',metal_coord.h)
+        }
+    }
+    document.querySelectorAll(".slidercontainer").forEach((slider)=>{
+        slider.parentElement.addEventListener('slider',(event)=>{
+            handle_update(event.target,event.detail)
+        })
+        slider.addEventListener('change',(event)=>{
+            console.log(slider.parentElement.parentElement.dataset.name,event.target.value)
+            async_put("/api/heat",{
+                device:slider.parentElement.parentElement.dataset.name,
+                setpoint:event.target.value
+            }).then();
+        })
+        slider.addEventListener('input',(event)=>{
+            event.target.parentElement.querySelector("text.cursor").textContent = event.target.value+'°'
+        })
+    })
+</script>

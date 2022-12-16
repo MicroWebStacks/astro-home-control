@@ -24,8 +24,8 @@ const valve_percent = device.heater.data.pi_heating_demand?device.heater.data.pi
       <Svg filename="drop" />
       <span class="humidity value">{humidity}</span>
     </div>
-    <div class="slider">
-      <SliderInfo cursor={20} target={20} room={19} metal={27}/>
+    <div class="slider" >
+      <SliderInfo cursor={20} target={20} room={temperature} metal={0}/>
     </div>
     <div class="valve">
       <CircularProgress percent={valve_percent}/>
@@ -111,10 +111,13 @@ div{
 <script>
 	import {event} from "../libs/client_utils"
   function panel_set_state(name,device){
+    //console.log(`panel_set_state(${name})`)
     const panel = document.querySelector(`.panel[data-name="${name}"]`)
     if(device.ambient.temperature){
       const slider = panel.querySelector(".slider")
-      event(slider,'slider',{room:device.ambient.temperature})
+      event(slider,'slider',{
+        room:device.ambient.temperature
+      })
     }
     if(device.ambient.humidity){
       panel.querySelector(".humidity.value").textContent = Math.round(device.ambient.humidity)+"%"
@@ -128,7 +131,12 @@ div{
         target:device.heater.data.current_heating_setpoint
       })
     }
-    //TODO set panel with state
+    if(device.metal){
+      const slider = panel.querySelector(".slider")
+      event(slider,'slider',{
+        metal:device.metal.data.temperature
+      })
+    }
   }
 
 
