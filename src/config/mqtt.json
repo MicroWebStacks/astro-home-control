@@ -19,7 +19,7 @@
             "nrf/bathroom tag",
             "lzig/bathroom heat weather",
             "lzig/office heat",
-            "nrf/office tag",
+            "lzig/office weather",
             "lzig/office heat weather"
          ],
         "publish" :true,
