@@ -75,7 +75,7 @@ const devices = {
           data:{}
       },
       ambient:{
-          topic:"nrf/office tag"
+          topic:"lzig/office weather"
       },
       metal:{
           topic:"lzig/office heat weather",

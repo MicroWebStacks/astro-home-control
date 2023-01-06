@@ -10,13 +10,15 @@ export interface Props {
 const { name } = Astro.props as Props;
 
 const device = get_device(name)
-console.log(` => from heat_slider ${name} : temperature = ${device.ambient.temperature}`)
 
 const temperature = device.ambient.temperature
+const target = device.heater.data.current_heating_setpoint
+const metal = device.metal.data.temperature
 const humidity = device.ambient.humidity?Math.round(device.ambient.humidity)+"%":""
 const time = device.heater.last_seen_mn?device.heater.last_seen_mn:""
 const valve_percent = device.heater.data.pi_heating_demand?device.heater.data.pi_heating_demand:0
 
+console.log(` => from heat_slider ${name} : temperature = ${temperature}`)
 ---
 <div class="panel" data-name={name}>
     <object data={`/media/${name}.svg`} />
@@ -25,7 +27,7 @@ const valve_percent = device.heater.data.pi_heating_demand?device.heater.data.pi
       <span class="humidity value">{humidity}</span>
     </div>
     <div class="slider" >
-      <SliderInfo cursor={20} target={20} room={temperature} metal={0}/>
+      <SliderInfo cursor={target} target={target} room={temperature} metal={metal}/>
     </div>
     <div class="valve">
       <CircularProgress percent={valve_percent}/>

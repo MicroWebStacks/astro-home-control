@@ -7,8 +7,19 @@ export interface Props {
     metal:number;
 }
 
-const { cursor, target, room, metal } = Astro.props as Props;
-
+let { cursor, target, room, metal } = Astro.props as Props;
+if(cursor === undefined){
+    cursor = 5
+}
+if(target === undefined){
+    target = 5
+}
+if(room === undefined){
+    room = 0
+}
+if(metal === undefined){
+    metal = 0
+}
 
 const room_min_temp_y = config.height - config.bottom_limit_height
 const track_height = room_min_temp_y - config.top_limit_height
