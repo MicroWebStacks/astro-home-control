@@ -2,7 +2,7 @@ import { logger } from '@/libs/logger.js'
 import {get_devices} from '@/libs/heat_state'
 import {publish} from '@/libs/mqtt'
 
-export async function put({params,request}){
+export async function PUT({params,request}){
   logger.verbose("api/heat> put()")
   const content = await request.json()
   const name = content.device
@@ -33,7 +33,7 @@ export async function put({params,request}){
 }
 
 //not used by app as SSE are sent
-export async function get(){
+export async function GET(){
   const devices = get_devices()
   const device = params.device
   if(!Object.keys(devices).includes(device)){

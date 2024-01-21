@@ -4,10 +4,11 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=node /home/pi/astro-home-control/dist/server/entry.mjs
-Restart=on-abort
-Environment="SERVER=http://10.0.0.31:4000"
-Environment="SERVER_HOST=10.0.0.31"
+ExecStart=node /home/wass/websites/astro-home-control/dist/server/entry.mjs
+Restart=always
+RestartSec=30s
+Environment="SERVER=http://10.0.0.91:4000"
+Environment="SERVER_HOST=10.0.0.91"
 Environment="SERVER_PORT=4000"
 Environment="MQTT_HOST=localhost"
 

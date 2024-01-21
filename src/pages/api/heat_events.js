@@ -1,7 +1,7 @@
 import {logger} from '@/libs/logger.js'
 import {SSE_Emitter} from '@/libs/heat_state'
 
-export async function get({request}){
+export async function GET({request}){
 
     logger.info("heat_events> get()")
     

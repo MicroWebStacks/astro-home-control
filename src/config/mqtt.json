@@ -27,8 +27,7 @@
     },
     "log":{
         "logfile":{
-            "default":"log/log (date).log",
-            "lifo":"../share/astro-home-control (date).log"
+            "default":"log/log (date).log"
         },
         "level":"info"
     }

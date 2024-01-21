@@ -3,7 +3,7 @@ import {logger} from '@/libs/logger.js'
 import  {get_devices} from '@/libs/power_state'
 import {publish} from '@/libs/mqtt'
 
-export async function put({request}){
+export async function PUT({request}){
   logger.info(`api/power> put()`)
   const content = await request.json()
   const device = content.name
@@ -39,7 +39,7 @@ export async function put({request}){
 }
 
 //not used by app as SSE are sent
-export async function get({params}){
+export async function GET({params}){
 
   const devices = get_devices()
   const device = params.device
