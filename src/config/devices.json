@@ -1,0 +1,42 @@
+[
+    {
+        "label":"Zigbee",
+        "link":"http://10.0.0.91:8030/#/"
+    },
+    {
+        "label":"Shelly Bathroom",
+        "link":"http://10.0.0.40"
+    },
+    {
+        "label":"Shelly Washing machine",
+        "link":"http://10.0.0.47"
+    },
+    {
+        "label":"Shelly Dryer",
+        "link":"http://10.0.0.36"
+    },
+    {
+        "label":"Shelly Fridge",
+        "link":"http://10.0.0.55"
+    },
+    {
+        "label":"Shelly Freezer",
+        "link":"http://10.0.0.59"
+    },
+    {
+        "label":"Shelly Micro-wave",
+        "link":"http://10.0.0.45"
+    },
+    {
+        "label":"Shelly Dish-washer",
+        "link":"http://10.0.0.51"
+    },
+    {
+        "label":"Shelly TV",
+        "link":"http://10.0.0.58"
+    },
+    {
+        "label":"Shelly Routers Servers",
+        "link":"http://10.0.0.62"
+    }
+]

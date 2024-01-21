@@ -1,0 +1,46 @@
+---
+import fs from 'fs'
+import {root_dir} from '../../libs/utils.js'
+import Layout from "@/layout/Layout.astro";
+
+const links = JSON.parse(fs.readFileSync(root_dir()+'/src/config/grafana.json'))
+
+---
+<Layout title="Heat" >
+	<div class="cards">
+		{links.map((card)=>(
+			<div class="card">
+				<a href={card.link} target="_blank">
+					<div class="content">{card.label}</div>
+				</a>
+			</div>
+		))}
+	</div>
+</Layout>
+
+<style>
+.cards{
+	display: flex;
+	gap: 1vw;
+	flex-wrap: wrap;
+}
+.card{
+	width:20vw;
+	height:10vw;
+	background-color: #bbb;
+	border-radius: 5px;
+}
+a{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+}
+.content{
+	color: #333;
+	flex-grow: 1;
+	text-align: center;
+	font-size: large;
+}
+</style>
