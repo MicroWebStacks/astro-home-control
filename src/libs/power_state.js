@@ -8,30 +8,30 @@ const devices = {
   poster:{
       topic:"lzig/poster socket",
       control:"lzig/poster socket/set",
-      media_on:"/media/poster.png",
-      media_off:"/media/poster-dark.png",
-      state:"off",power:0,disabled:false
+      media_on:"/media/poster-ON.png",
+      media_off:"/media/poster-OFF.png",
+      state:"OFF",power:0,disabled:false
   },
   lifx:{
       topic:"lzig/lifx socket",
       control:"lzig/lifx socket/set",
-      media_on:"/media/lifx.png",
-      media_off:"/media/lifx-dark.png",
-      state:"off",power:0,disabled:false
+      media_on:"/media/lifx-ON.png",
+      media_off:"/media/lifx-OFF.png",
+      state:"OFF",power:0,disabled:false
   },
   mesh:{
       topic:"lzig/wifi mesh socket",
       control:"lzig/wifi mesh socket/set",
-      media_on:"/media/wifi-on.png",
-      media_off:"/media/wifi-off.png",
-      state:"off",power:0,disabled:false
+      media_on:"/media/wifi-ON.png",
+      media_off:"/media/wifi-OFF.png",
+      state:"OFF",power:0,disabled:false
   },
   pc:{
       topic:"lzig/pc socket",
       control:"lzig/pc socket/set",
-      media_on:"/media/pc.png",
-      media_off:"/media/pc.png",
-      state:"off",power:0,disabled:true
+      media_on:"/media/pc-ON.png",
+      media_off:"/media/pc-OFF.png",
+      state:"OFF",power:0,disabled:true
   },
 }
 

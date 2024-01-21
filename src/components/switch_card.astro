@@ -129,7 +129,7 @@ input:disabled.on + .slider{
         console.log(` * init for '${name}'`)
         element.onchange = (e)=>{
           const device_name = e.target.getAttribute("data-name")
-          const state = e.target.checked?"on":"off"
+          const state = e.target.checked?"ON":"OFF"
           card_toggle_switch(device_name,state)
         }
     }

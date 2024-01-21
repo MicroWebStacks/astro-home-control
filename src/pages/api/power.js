@@ -11,7 +11,7 @@ export async function PUT({request}){
   const devices_list = Object.keys(devices)
     if(!devices_list.includes(device)){
         logger.error(`api/power> no '${device}' device available for control`)
-        return new Response(JSON.stringify({state:"off"}), {
+        return new Response(JSON.stringify({state:"OFF"}), {
             status: 404,
             headers: {
               "Content-Type": "application/json"
@@ -45,7 +45,7 @@ export async function GET({params}){
   const device = params.device
   if(!Object.keys(devices).includes(device)){
       logger.error(`api/power> device : '${device}' not available`)
-      return new Response(JSON.stringify({state:"off"}), {
+      return new Response(JSON.stringify({state:"OFF"}), {
         status: 404,
         statusText: `No ${device} device available`,
         headers: {

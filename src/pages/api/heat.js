@@ -38,7 +38,7 @@ export async function GET(){
   const device = params.device
   if(!Object.keys(devices).includes(device)){
       logger.error(`api/heat> device : '${device}' not available`)
-      return new Response(JSON.stringify({state:"off"}), {
+      return new Response(JSON.stringify({state:"OFF"}), {
         status: 404,
         statusText: `No ${device} device available`,
         headers: {
