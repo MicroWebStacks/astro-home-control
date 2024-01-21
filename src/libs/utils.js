@@ -59,11 +59,7 @@ function window_event(event_name,data){
 }
 
 function root_dir(){
-	let rootdir = rel_to_abs(import.meta.url,"../..")
-	if(import.meta.env.PROD){
-	  rootdir = rel_to_abs(import.meta.url,"../..")
-	}
-	return rootdir	
+	return process.cwd()
 }
 
 function log_file_path(config){

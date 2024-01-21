@@ -5,6 +5,7 @@ After=multi-user.target
 [Service]
 Type=simple
 ExecStart=node /home/wass/websites/astro-home-control/dist/server/entry.mjs
+WorkingDirectory=/home/wass/websites/astro-home-control/
 Restart=always
 RestartSec=30s
 Environment="SERVER=http://10.0.0.91:4000"
