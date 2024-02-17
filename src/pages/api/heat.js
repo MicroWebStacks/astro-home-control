@@ -19,9 +19,8 @@ export async function PUT({params,request}){
     });        
   }
 
-  //TODO publish content to MQTT
   let topic = devices[name].heater.topic+"/set"
-  let payload = JSON.stringify({current_heating_setpoint:content.setpoint})
+  let payload = JSON.stringify({current_heating_setpoint:parseInt(content.setpoint,10)})
   publish(topic,payload)
   console.log(`heat.js> to set ${name} to ${content.setpoint}`)
   return new Response(JSON.stringify(devices[name]), {
