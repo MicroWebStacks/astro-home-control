@@ -1,10 +1,11 @@
 [Unit]
-Description=Astro home webapp service to run as an SSR
+Description=Astro home webapp service to run as an SSR middleware with express.js
 After=multi-user.target
 
 [Service]
+User=wass
 Type=simple
-ExecStart=node /home/wass/websites/astro-home-control/dist/server/entry.mjs
+ExecStart=node server/server.js
 WorkingDirectory=/home/wass/websites/astro-home-control/
 Restart=always
 RestartSec=30s

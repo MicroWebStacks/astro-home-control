@@ -6,6 +6,10 @@
 
 <img src="./media/astro-home-control.png" width="400">
 
+## astro node mode
+* standalone : failing to serve on host ip
+* middleware : used
+
 ## Developper Guide
 
 * Astro adapter : Node standalone
