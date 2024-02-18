@@ -1,0 +1,38 @@
+[
+    {
+        "label":"All rooms",
+        "link":"http://10.0.0.91:3000/d/f1b4b20a-7641-4848-9d44-8ea9ff8c14ba/all-rooms?orgId=1&kiosk"
+    },
+    {
+        "label":"Batteries Percent",
+        "link":"http://10.0.0.91:3000/d/c5fa4df5-8f32-4131-a9ef-6b9c9eb991ad/batteries-percent?orgId=1&kiosk"
+    },
+    {
+        "label":"Batteries Voltage",
+        "link":"http://10.0.0.91:3000/d/f08d2a16-eac4-45f4-ae26-33a11ecae0a5/batteries-voltage?orgId=1&kiosk"
+    },
+    {
+        "label":"Power",
+        "link":"http://10.0.0.91:3000/d/ad48545a-cf1c-4bd4-8c18-a56e6d12be7e/power?orgId=1&kiosk"
+    },
+    {
+        "label":"Thread SensorTags",
+        "link":"http://10.0.0.91:3000/d/ff55f41e-5bfd-409b-8ed2-8bd0dbba82e6/thread-sensortags?orgId=1&kiosk"
+    },
+    {
+        "label":"Bathroom",
+        "link":"http://10.0.0.91:3000/d/a05d805d-6036-4d7d-a0ca-3fe9732bf4b2/bathroom?orgId=1&kiosk"
+    },
+    {
+        "label":"Bedroom",
+        "link":"http://10.0.0.91:3000/d/b5247e91-71eb-4f3c-92ee-fb273f954910/bedroom?orgId=1&kiosk"
+    },
+    {
+        "label":"Livingroom",
+        "link":"http://10.0.0.91:3000/d/f3e45376-55cd-46f4-b366-e8412f26bf33/livingroom?orgId=1&kiosk"
+    },
+    {
+        "label":"Office",
+        "link":"http://10.0.0.91:3000/d/f0db4445-ba3e-4ebf-af49-473313356a43/office?orgId=1&kiosk"
+    }
+]

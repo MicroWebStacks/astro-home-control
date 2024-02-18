@@ -5,9 +5,11 @@ export async function GET({request}){
 
     logger.info("power_events> get()")
     
+    var power_events_listener
+
     const stream = new ReadableStream({
             start(controller){
-                const events_listener = (devices)=>{
+                power_events_listener = (devices)=>{
                     if(controller){
                         logger.verbose("power_events> SSE_Emitter 'power'")
                         const data = `data: ${JSON.stringify(devices)}\r\n\r\n`;
@@ -17,10 +19,11 @@ export async function GET({request}){
                     }
                 }
                 SSE_Emitter.removeAllListeners('power')
-                SSE_Emitter.on('power',events_listener)
+                SSE_Emitter.on('power',power_events_listener)
             },
             cancel(){
                 logger.info("power_events> cancel() closing")
+                SSE_Emitter.removeListener('power', power_events_listener)
             }
         })
 

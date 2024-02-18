@@ -1,88 +1,13 @@
 import {logger} from './logger.js'
 import * as mqtt from '@/libs/mqtt.js'
 import events from 'events'
+import heat_devices from '@/config/heat_devices.json'
 
 import { convert_last_seen_minutes } from './utils.js'
 
 const SSE_Emitter = new events.EventEmitter()
 
-const devices = {
-  livingroom:{
-      name:"Livingroom",
-      heater:{
-          topic:"lzig/living heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/livingroom tag"
-      },
-      metal:{
-          topic:"lzig/living heat weather",
-          data:{}
-      }
-  },
-  bedroom:{
-      name:"Bedroom",
-      heater:{
-          topic:"lzig/bedroom heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/bedroom tag"
-      },
-      metal:{
-          topic:"lzig/bedroom heat weather",
-          data:{}
-      }
-  },
-  kitchen:{
-      name:"Kitchen",
-      heater:{
-          topic:"lzig/kitchen heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/kitchen tag"
-      },
-      metal:{
-          topic:"lzig/kitchen heat weather",
-          data:{}
-      }
-  },
-  bathroom:{
-      name:"Bathroom",
-      heater:{
-          topic:"lzig/bathroom heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"nrf/bathroom tag"
-      },
-      metal:{
-          topic:"lzig/bathroom heat weather",
-          data:{}
-      }
-  },
-  office:{
-      name:"Office",
-      heater:{
-          topic:"lzig/office heat",
-          last_seen_mn:"Not seen",
-          data:{}
-      },
-      ambient:{
-          topic:"lzig/office weather"
-      },
-      metal:{
-          topic:"lzig/office heat weather",
-          data:{}
-      }
-  }
-}
+const devices = heat_devices
 
 function get_devices(){
   return devices

@@ -1,9 +1,6 @@
 ---
-import fs from 'fs'
-import {root_dir} from '../../libs/utils.js'
 import Layout from "@/layout/Layout.astro";
-
-const links = JSON.parse(fs.readFileSync(root_dir()+'/src/config/devices.json'))
+import links from '@/config/menu_devices.json'
 
 ---
 <Layout title="Heat" >

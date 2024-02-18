@@ -1,0 +1,77 @@
+{
+    "livingroom":{
+        "name":"Livingroom",
+        "heater":{
+            "topic":"lzig/living heat",
+            "last_seen_mn":"Not seen",
+            "data":{}
+        },
+        "ambient":{
+            "topic":"thread_tags/thingy01/env"
+        },
+        "metal":{
+            "topic":"lzig/living heater weather",
+            "data":{}
+        }
+    },
+    "bedroom":{
+        "name":"Bedroom",
+        "heater":{
+            "topic":"lzig/bedroom heat",
+            "last_seen_mn":"Not seen",
+            "data":{}
+        },
+        "ambient":{
+            "topic":"lzig/bedroom weather"
+        },
+        "metal":{
+            "topic":"lzig/bedroom heater weather",
+            "data":{}
+        }
+    },
+    "kitchen":{
+        "name":"Kitchen",
+        "heater":{
+            "topic":"lzig/kitchen heat",
+            "last_seen_mn":"Not seen",
+            "data":{}
+        },
+        "ambient":{
+            "topic":"lzig/kitchen weather"
+        },
+        "metal":{
+            "topic":"lzig/kitchen heater weather",
+            "data":{}
+        }
+    },
+    "bathroom":{
+        "name":"Bathroom",
+        "heater":{
+            "topic":"lzig/bathroom heat",
+            "last_seen_mn":"Not seen",
+            "data":{}
+        },
+        "ambient":{
+            "topic":"thread_tags/thingy02/env"
+        },
+        "metal":{
+            "topic":"lzig/bathroom heater weather",
+            "data":{}
+        }
+    },
+    "office":{
+        "name":"Office",
+        "heater":{
+            "topic":"lzig/office heat",
+            "last_seen_mn":"Not seen",
+            "data":{}
+        },
+        "ambient":{
+            "topic":"lzig/office air"
+        },
+        "metal":{
+            "topic":"lzig/office heater weather",
+            "data":{}
+        }
+    }
+}

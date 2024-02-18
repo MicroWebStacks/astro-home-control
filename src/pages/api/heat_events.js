@@ -5,9 +5,11 @@ export async function GET({request}){
 
     logger.info("heat_events> get()")
     
+    var heat_events_listener
+
     const stream = new ReadableStream({
         start(controller){
-            const events_listener = (devices)=>{
+            heat_events_listener = (devices)=>{
                 if(controller){
                     logger.verbose("heat_events> SSE_Emitter 'heat'")
                     const data = `data: ${JSON.stringify(devices)}\r\n\r\n`;
@@ -16,14 +18,12 @@ export async function GET({request}){
                     logger.warn("heat_events> no sse_controller")
                 }
             }
-            SSE_Emitter.off('heat',events_listener)
-            SSE_Emitter.on('heat',events_listener)
+            SSE_Emitter.off('heat',heat_events_listener)
+            SSE_Emitter.on('heat',heat_events_listener)
         },
         cancel(){
             logger.info("heat_events> cancel() closing")
-            if(sse_controller){
-                sse_controller.close()
-            }
+            SSE_Emitter.removeListener('heat', heat_events_listener)
         }
     })
 
