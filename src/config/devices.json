@@ -4,6 +4,10 @@
         "link":"http://10.0.0.91:8030/#/"
     },
     {
+        "label":"Open thread",
+        "link":"http://10.0.0.91"
+    },
+    {
         "label":"Shelly Bathroom",
         "link":"http://10.0.0.40"
     },

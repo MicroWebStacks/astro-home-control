@@ -5,7 +5,7 @@
     },
     {
         "text":"Links",
-        "href":"/links/",
+        "href":"/links/devices",
         "items":[
             {
                 "text":"Devices",
