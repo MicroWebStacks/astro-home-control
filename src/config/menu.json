@@ -4,26 +4,48 @@
         "href":"/"
     },
     {
-        "text":"Links",
-        "href":"/links/devices",
-        "items":[
-            {
-                "text":"Devices",
-                "href":"devices"
-            },
-            {
-                "text":"Grafana",
-                "href":"grafana"
-            }
-        ]
-    },
-    {
         "text":"Power",
         "href":"/power/"
     },
     {
         "text":"Sound",
         "href":"/sound/"
+    },
+    {
+        "text":"Board",
+        "href":"/board/temperature",
+        "items":[
+            {
+                "text":"temperature",
+                "href":"/board/temperature"
+            },
+            {
+                "text":"heating",
+                "href":"/board/heating"
+            },
+            {
+                "text":"overview",
+                "href":"/board/overview"
+            },
+            {
+                "text":"air",
+                "href":"/board/air"
+            }
+        ]
+    },
+    {
+        "text":"Dev",
+        "href":"/dev/devices",
+        "items":[
+            {
+                "text":"devices",
+                "href":"/dev/deviecs"
+            },
+            {
+                "text":"grafana",
+                "href":"/dev/grafana"
+            }
+        ]
     },
     {
         "icon":"github",
