@@ -6,6 +6,8 @@
             "lzig/lifx socket",
             "lzig/poster socket",
             "lzig/wifi mesh socket",
+            "lzig/sonos front socket",
+            "lzig/sonos rear socket",
             "lzig/living heat",
             "thread_tags/thingy01/env",
             "lzig/living heater weather",

@@ -1,5 +1,6 @@
 {
     "poster":{
+        "name": "Poster Light",
         "topic":"lzig/poster socket",
         "control":"lzig/poster socket/set",
         "media_on":"/media/poster-ON.png",
@@ -9,6 +10,7 @@
         "disabled":false
     },
     "lifx":{
+        "name": "Lifx LEDs",
         "topic":"lzig/lifx socket",
         "control":"lzig/lifx socket/set",
         "media_on":"/media/lifx-ON.png",
@@ -18,15 +20,17 @@
         "disabled":false
     },
     "mesh":{
+        "name": "Wifi Mesh",
         "topic":"lzig/wifi mesh socket",
         "control":"lzig/wifi mesh socket/set",
-        "media_on":"/media/wifi-ON.png",
-        "media_off":"/media/wifi-OFF.png",
+        "media_on":"/media/mesh-ON.png",
+        "media_off":"/media/mesh-OFF.png",
         "state":"OFF",
         "power":0,
         "disabled":false
     },
     "pc":{
+        "name": "PC",
         "topic":"lzig/pc socket",
         "control":"lzig/pc socket/set",
         "media_on":"/media/pc-ON.png",
@@ -34,5 +38,25 @@
         "state":"OFF",
         "power":0,
         "disabled":true
+    },
+    "sonos_front":{
+        "name": "Sonos Front",
+        "topic":"lzig/sonos front socket",
+        "control":"lzig/sonos front socket/set",
+        "media_on":"/media/sonos-front-on.webp",
+        "media_off":"/media/sonos-front-off.webp",
+        "state":"OFF",
+        "power":0,
+        "disabled":false
+    },
+    "sonos_rear":{
+        "name": "Sonos Rear",
+        "topic":"lzig/sonos rear socket",
+        "control":"lzig/sonos rear socket/set",
+        "media_on":"/media/sonos-rear-on.webp",
+        "media_off":"/media/sonos-rear-off.webp",
+        "state":"OFF",
+        "power":0,
+        "disabled":false
     }
 }

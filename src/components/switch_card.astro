@@ -1,19 +1,19 @@
 ---
-import {get_device} from '@/libs/power_state'
+import {get_device} from '@/libs/power_state.js'
 export interface Props {
     name: string;
 }
 
 const { name } = Astro.props as Props;
-
-const {state,power} = get_device(name)
-const disabled = (name == "pc")?state:false
+const device = get_device(name)
+const disabled = (name == "pc")?device.state:false
+const on = (device.state == "ON")
 ---
-<div class="card" data-name={name}>
-    <img src={`/media/${name}-${state}.png`}>
-    <h1>{name}</h1>
+<div class="card" data-name={name} data-media-on={device.media_on} data-media-off={device.media_off}>
+    <img src={on?device.media_on:device.media_off}>
+    <h1>{device.name}</h1>
     <label class="switch">
-        <input  class={`check_in ${(state == "ON")?"on":"off"}`} type="checkbox" checked={(state == "ON")} 
+        <input  class={`check_in ${on?"on":"off"}`} type="checkbox" checked={on}
                 disabled={disabled} data-name={name}
         >
         <span class="slider"></span>
@@ -100,18 +100,20 @@ input:disabled.on + .slider{
   function card_set_state(name,state){
     console.log(`card_set_state() ${name} to ${state}`)
     const card = document.querySelector(`.card[data-name="${name}"]`)
+    const media_on = card.getAttribute("data-media-on")
+    const media_off = card.getAttribute("data-media-off")
     const input = card.querySelector("input")
+    const img = card.querySelector("img")
     if(state == "ON"){
       input.classList.add("on")
       input.classList.remove("off")
+      img.src = media_on
     }else{
       input.classList.add("off")
       input.classList.remove("on")
+      img.src = media_off
     }
-    const img = card.querySelector("img")
-    img.src = `/media/${name}-${state}.png`
   }
-
 
   function card_toggle_switch(name,state){
     console.log(`   * put() '${name}' at '${state}'`)

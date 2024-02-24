@@ -44,28 +44,4 @@ li:hover{
 
 </style>
 
-<script>
-	import {event} from "../../libs/client_utils"
-	console.log("client:power> script()")
-	function dispatch_power_state(data){
-		Object.keys(data).forEach((name)=>{
-			const card = document.querySelector(`.card[data-name="${name}"]`)
-			if(!card){
-				console.log(name)
-			}
-			event(card,"update",data[name])
-		})
-	}
-	function setup_sse(){
-		const evtSource = new EventSource("/api/power_events")
-	
-		evtSource.onmessage = (event) => {
-			dispatch_power_state(JSON.parse(event.data))
-		}
-		evtSource.onerror = (err) => {
-			  console.error("EventSource failed:", err);
-			  evtSource.close();
-		};	
-	}
-	setup_sse()
-</script>
+<script src="../../libs/power_client.js"/>

@@ -1,0 +1,41 @@
+---
+import Layout from "@/layout/Layout.astro";
+import SwitchCard from "@/components/switch_card.astro";
+
+console.log("power/index> power")
+---
+<Layout title="Sound" >
+	<ul class="power page">
+		<li>
+			<SwitchCard name="sonos_front" />
+		</li>
+		<li>
+			<SwitchCard name="sonos_rear" />
+		</li>
+	</ul>
+</Layout>
+
+
+<style>
+ul{
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	list-style: none;
+	padding: 0px;
+}
+li{
+	border-radius: 10px;
+	background-color:rgb(112, 112, 112);
+	overflow: hidden;
+    box-shadow: 2px 1px 10px rgb(123, 123, 123);
+}
+li:hover{
+	box-shadow: 4px 5px 5px #ccc;
+}
+
+</style>
+
+<script src="../../libs/power_client.js"/>

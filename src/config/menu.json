@@ -22,6 +22,10 @@
         "href":"/power/"
     },
     {
+        "text":"Sound",
+        "href":"/sound/"
+    },
+    {
         "icon":"github",
         "href":"https://github.com/MicroWebStacks/astro-home-control"
     }
