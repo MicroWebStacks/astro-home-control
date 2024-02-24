@@ -11,6 +11,6 @@ export default defineConfig({
     host:true
   },
   adapter: node({
-    mode: 'standalone'
+    mode: 'middleware'
   })
 });
