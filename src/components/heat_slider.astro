@@ -12,6 +12,7 @@ const { name } = Astro.props as Props;
 const device = get_device(name)
 
 const temperature = device.ambient.temperature
+const temperature_text = temperature?`${temperature.toFixed(1)}°`:""
 const target = device.heater.data.current_heating_setpoint
 const metal = device.metal.data.temperature
 const humidity = device.ambient.humidity?Math.round(device.ambient.humidity)+"%":""
@@ -28,7 +29,7 @@ console.log(` => from heat_slider ${name} : temperature = ${temperature}`)
     </div>
     <div class="sensor temperature">
       <Svg filename="temperature" />
-      <span class="temperature value">{temperature.toFixed(1)}°</span>
+      <span class="temperature value">{temperature_text}</span>
     </div>
     <div class="slider" >
       <SliderInfo cursor={target} target={target} room={temperature} metal={metal}/>
