@@ -131,6 +131,7 @@ div{
     //console.log(`panel_set_state(${name})`)
     const panel = document.querySelector(`.panel[data-name="${name}"]`)
     if(device.ambient.temperature){
+      panel.querySelector(".temperature.value").textContent = device.ambient.temperature.toFixed(1)+"°"
       const slider = panel.querySelector(".slider")
       event(slider,'slider',{
         room:device.ambient.temperature
