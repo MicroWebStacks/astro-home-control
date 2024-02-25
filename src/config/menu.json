@@ -5,30 +5,36 @@
     },
     {
         "text":"Power",
-        "href":"/power/"
-    },
-    {
-        "text":"Sound",
-        "href":"/sound/"
+        "href":"/power/light_net",
+        "items":[
+            {
+                "text":"Light Net PC",
+                "href":"/power/light_net"
+            },
+            {
+                "text":"Sound",
+                "href":"/power/sound"
+            }
+        ]
     },
     {
         "text":"Board",
         "href":"/board/temperature",
         "items":[
             {
-                "text":"temperature",
+                "text":"Temperature",
                 "href":"/board/temperature"
             },
             {
-                "text":"heating",
+                "text":"Heating",
                 "href":"/board/heating"
             },
             {
-                "text":"overview",
+                "text":"Overview",
                 "href":"/board/overview"
             },
             {
-                "text":"air",
+                "text":"Air",
                 "href":"/board/air"
             }
         ]
@@ -38,11 +44,11 @@
         "href":"/dev/devices",
         "items":[
             {
-                "text":"devices",
-                "href":"/dev/deviecs"
+                "text":"Devices",
+                "href":"/dev/devices"
             },
             {
-                "text":"grafana",
+                "text":"Grafana",
                 "href":"/dev/grafana"
             }
         ]

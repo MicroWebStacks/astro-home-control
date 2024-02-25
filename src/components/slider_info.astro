@@ -34,11 +34,11 @@ const target_coord = target_to_coord(target)
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 150 400" >
          <rect class="room"            x="0"  y={room_coord.y}   rx="5" ry="5" width="150" height={room_coord.h} fill="#f7e9e9"/>
-         <rect class="metal"           x="35" y={metal_coord.y}  width="80" height={metal_coord.h} fill="#f5d3d3"/>
-         <rect class="top_target"      x="65" y="0"        width="20" height={config.top_limit_height} fill="#8F8F8F"/>
-         <rect class="track"           x="65" y={config.top_limit_height}   width="20" height={track_height} fill="#707070"/>
-         <rect class="target"          x="65" y={target_coord.y}      width="20" height={target_coord.h} fill="#B54949"/>
-         <rect class="bottom_target"   x="65" y={room_min_temp_y}      width="20" height={config.bottom_limit_height} fill="#8F8F8F"/>
+         <rect class="metal"           x="35" y={metal_coord.y}             width="80" height={metal_coord.h} fill="#f5d3d3"/>
+         <rect class="top_target"      x="65" y="0"                         width="22" height={config.top_limit_height} fill="#999"/>
+         <rect class="track"           x="65" y={config.top_limit_height}   width="22" height={track_height} fill="#999"/>
+         <rect class="target"          x="65" y={target_coord.y}            width="22" height={target_coord.h} fill="#B54949"/>
+         <rect class="bottom_target"   x="65" y={room_min_temp_y}           width="22" height={config.bottom_limit_height} fill="#999"/>
         </svg>
     <input class="slider" orient="vertical" type="range" step="1" value={cursor} min="5" max="27">
     <span class="range-value"></span>
@@ -77,9 +77,8 @@ input::-webkit-slider-thumb {
   box-shadow: -3px 0px 5px black;
 }
 text.cursor{
-    fill: black;
-    font: bold 12px sans-serif;
-    
+    fill: #B54949;
+    font: bold 14px sans-serif;
     user-select: none;
 }
 </style>

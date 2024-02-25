@@ -22,9 +22,13 @@ console.log(` => from heat_slider ${name} : temperature = ${temperature}`)
 ---
 <div class="panel" data-name={name}>
     <object data={`/media/${name}.svg`} />
-    <div class="humidity">
+    <div class="sensor humidity">
       <Svg filename="drop" />
       <span class="humidity value">{humidity}</span>
+    </div>
+    <div class="sensor temperature">
+      <Svg filename="temperature" />
+      <span class="temperature value">{temperature.toFixed(1)}°</span>
     </div>
     <div class="slider" >
       <SliderInfo cursor={target} target={target} room={temperature} metal={metal}/>
@@ -46,28 +50,39 @@ console.log(` => from heat_slider ${name} : temperature = ${temperature}`)
   align-items: center;
   width:150px;
   max-width:20vw;
+  padding-top: 0px;
 }
 
 object{
-  margin:5px;
   max-width:70px;
 }
 
-.humidity{
+.sensor{
   width:150px;
   height:50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0px;
 }
-.humidity.value{
+.value{
   width: 64px;
   font-size:1.5em;
+}
+.humidity.value{
   color:rgb(178, 220, 249);
 }
-.humidity.drop{
+.temperature.value{
+  color:#f7e9e9;
 }
-
+.sensor.humidity :global(svg){
+  width: 18px;
+  padding-right: 10px;
+}
+.sensor.temperature :global(svg){
+  fill: #f7e9e9;
+  height: 52px;
+}
 .slider{
   background-color:#BDC0BE;
   height:400px;
@@ -81,34 +96,33 @@ object{
   height:60px;
   display:flex;
   justify-content: center;
+  padding-bottom: 0px;
 }
-
 .signal{
   width:150px;
   height:30px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0px;
 }
 .signal.value{
   width: 48px;
   margin-left:10px;
   padding-top: 3px;
   color: rgb(208, 205, 165);
+  font-size:medium;
 }
 
 div{
   color: black;
   padding:10px;
 }
-
-</style>
-
-<style is:inline>
-.valve > svg{
+.valve :global(svg){
   width:48px;
 }
 </style>
+
 
 <script>
 	import {event} from "../libs/client_utils"
