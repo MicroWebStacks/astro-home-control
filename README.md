@@ -6,20 +6,6 @@
 
 <img src="./media/astro-home-control.png" width="400">
 
-## astro node mode
-* standalone : failing to serve on host ip
-* middleware : used
-
-## Developper Guide
-
-* Astro adapter : Node standalone
-
-dependencies :
-* dotenv : conf reading .env config
-* mqtt : runs as mqtt client
-* winston : for logging
-
-
 ## credits
 - https://www.svgrepo.com/svg/194922/bathtub-bathroom
 - https://www.svgrepo.com/svg/338007/accommodation-hotel-bed-sleeping
