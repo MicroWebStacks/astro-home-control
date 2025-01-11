@@ -14,5 +14,8 @@ Environment="SERVER_HOST=10.0.0.91"
 Environment="SERVER_PORT=4000"
 Environment="MQTT_HOST=localhost"
 
+StandardOutput=journal
+StandardError=journal
+
 [Install]
 WantedBy=multi-user.target

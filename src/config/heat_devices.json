@@ -67,7 +67,7 @@
             "data":{}
         },
         "ambient":{
-            "topic":"lzig/office air"
+            "topic":"lzig/office weather"
         },
         "metal":{
             "topic":"lzig/office heater weather",

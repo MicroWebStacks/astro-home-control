@@ -22,6 +22,7 @@
             "lzig/bathroom heater weather",
             "lzig/office heat",
             "lzig/office heater weather",
+            "lzig/office weather",
             "lzig/office air"
          ],
         "publish" :true,
