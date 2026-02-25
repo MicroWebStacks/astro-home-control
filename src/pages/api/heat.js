@@ -9,7 +9,7 @@ export async function PUT({params,request}){
   const devices = get_devices()
   const devices_list = Object.keys(devices)
 
-  if((!"device" in content) ||(!devices_list.includes(content.device))){
+  if(!("device" in content) || (!devices_list.includes(content.device))){
     logger.error(`api/heat> no '${name}' device available for control`)
     return new Response({}, {
         status: 404,
@@ -34,20 +34,8 @@ export async function PUT({params,request}){
 //not used by app as SSE are sent
 export async function GET(){
   const devices = get_devices()
-  const device = params.device
-  if(!Object.keys(devices).includes(device)){
-      logger.error(`api/heat> device : '${device}' not available`)
-      return new Response(JSON.stringify({state:"OFF"}), {
-        status: 404,
-        statusText: `No ${device} device available`,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });        
-  }
-
-  logger.verbose(`api/heat> get() ${device} = ${devices[device].name}`)
-  return new Response(JSON.stringify({device:devices[device]}), {
+  logger.verbose("api/heat> get()")
+  return new Response(JSON.stringify({devices}), {
       status: 200,
       headers: {
         "Content-Type": "application/json"
@@ -56,4 +44,3 @@ export async function GET(){
 }
 
 logger.info("api/heat> init")
-

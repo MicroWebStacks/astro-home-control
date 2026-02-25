@@ -1,15 +1,19 @@
 import fs from 'fs'
 import {transports,createLogger, format} from 'winston'
-import {root_dir,log_file_path} from './utils'
+import {root_dir,log_file_path} from './utils.js'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-const config = JSON.parse(fs.readFileSync(root_dir()+'/src/config/mqtt.json'))
+const GLOBAL_LOGGER_KEY = Symbol.for('@microwebstacks/astro-home-control.logger')
 
-let filename = log_file_path(config)
-let ex_filename = filename + ".exception.log"
+let logger = globalThis[GLOBAL_LOGGER_KEY]
 
-const logger = createLogger({
+if(!logger){
+  const config = JSON.parse(fs.readFileSync(root_dir()+'/src/config/mqtt.json'))
+  const filename = log_file_path(config)
+  const ex_filename = filename + ".exception.log"
+
+  logger = createLogger({
     format: format.combine(
         format.timestamp(),
         format.printf(log => {
@@ -36,12 +40,15 @@ const logger = createLogger({
     ]
   });
 
-logger.info(`logger> filename : ${filename}`);
-logger.error("logger> error check");
-logger.warn("logger> warn check");
-logger.info("logger> info check");
-logger.verbose("logger> verbose check");
-logger.debug("logger> debug check");
+  globalThis[GLOBAL_LOGGER_KEY] = logger
+
+  logger.info(`logger> filename : ${filename}`);
+  logger.error("logger> error check");
+  logger.warn("logger> warn check");
+  logger.info("logger> info check");
+  logger.verbose("logger> verbose check");
+  logger.debug("logger> debug check");
+}
 
 export{
   logger

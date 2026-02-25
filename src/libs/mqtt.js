@@ -3,7 +3,7 @@ import fs from 'fs'
 import mqtt  from 'mqtt'
 import {logger} from './logger.js'
 import events from 'events'
-import {root_dir} from './utils'
+import {root_dir} from './utils.js'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -40,6 +40,7 @@ function onConnectionLost(responseObject) {
 
 function onMessageArrived(topic,message) {
   //All power topics have "socket" all others are heat
+  logger.verbose(`mqtt> onMessageArrived() topic:${topic} message:${message.toString()}`);
   if(topic.includes("socket")){
     Emitter.emit('power',{topic:topic,msg:message});
   }else{
